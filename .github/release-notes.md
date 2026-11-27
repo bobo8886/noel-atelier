@@ -1,8 +1,8 @@
 **[Open the gift in English](https://bobo8886.github.io/noel-atelier/?lang=en) · [用中文拆礼物](https://bobo8886.github.io/noel-atelier/?lang=zh)**
 
-A mounted photograph of your tree now accompanies a folded Christmas letter. Save the spread or the original portrait postcard, then write and seal a personal reply. Both languages and the offline edition are included.
+*Lamplight on Snow* is an original 45-second Christmas score for music box and strings. Choose **Play music** to listen online or in your offline gift. The letter, reply desk and PNG now share a cotton-paper letterhead, handwritten salutation and a separate signature.
 
-左边装裱当晚的圣诞树，右边展开一封带邮戳与落款的来信。可保存横版来信或竖版明信片，再亲手写回信、封好并下载。两种语言和离线版同步更新。
+《灯影落在雪上》是为这份礼物创作的圣诞配乐，点顶栏声音按钮即可播放。来信、写信台和导出的 PNG 都采用了新信头与手写称呼，保留每一处亲笔分段。下载的回信也能离线听完整首曲子。 [试听 / Listen](https://bobo8886.github.io/noel-atelier/assets/music/lamplight-on-snow.mp3)
 
 | Download | What’s inside |
 | --- | --- |

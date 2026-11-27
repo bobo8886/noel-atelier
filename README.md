@@ -24,6 +24,8 @@ The bow comes undone, the box folds open, and a fir grows above a frozen lake. C
 
 ## Send it to someone
 
+The date, salutation and signature occupy separate parts of the sheet. The layout draws on a surviving letter by Jane Austen. The Chinese edition uses a local subset of WenKai for handwriting and keeps closing punctuation with the preceding text when printing. [British Library collection](https://www.bl.uk/stories/blogs/posts/jane-austen-at-250) · [W3C Chinese layout requirements](https://www.w3.org/TR/clreq/)
+
 1. Open the gift and choose the envelope in the top toolbar. Enter a name, an optional signature, and a message. Seal the gift to download a personalized HTML file.
 2. Send that file as an attachment. Your recipient can save it and open it in a browser, even offline. The parcel starts sealed, the greeting bears their name, and your message appears on the final card.
 3. Choose **Save letter** to keep the photograph and letter together as a landscape PNG. The arrow beside it offers the original portrait postcard. Choose **Send a gift back** to write and seal a reply. A wish written during the visit stays in the recipient’s own letter.
@@ -39,6 +41,10 @@ The bow comes undone, the box folds open, and a fir grows above a frozen lake. C
 
 Use **Tab** and **Enter** to operate the controls. With the tree focused, the left and right arrows rotate the view and holding **Space** charges a wish. You can switch between English and Simplified Chinese inside the gift.
 
+## The music in the parcel
+
+Choose **Play music** in the top toolbar for *Lamplight on Snow*, an original 24-bar Christmas piece in G major and 6/8 time. A music-box motif passes to the strings and returns over a 45-second loop. Web Audio plays the same score in the browser and in offline replies. [Listen to the recording](https://bobo8886.github.io/noel-atelier/assets/music/lamplight-on-snow.mp3)
+
 ## Online, offline, or local
 
 | Edition | How to open it |
@@ -46,7 +52,7 @@ Use **Tab** and **Enter** to operate the controls. With the tree focused, the le
 | Live website | Open the [English edition](https://bobo8886.github.io/noel-atelier/?lang=en) or [中文页面](https://bobo8886.github.io/noel-atelier/?lang=zh). Mouse, touch and keyboard work immediately. Camera gestures are optional. |
 | Single HTML | Save the [offline gift](https://github.com/bobo8886/noel-atelier/releases/latest/download/noel-atelier-offline.html), then double-click it. It includes both languages, the animations, audio, printable letter, portrait postcard and return-gift maker. |
 | Complete edition | Extract the [release ZIP](https://github.com/bobo8886/noel-atelier/releases/latest/download/noel-atelier.zip). It includes the portable HTML and the source edition with its local camera model. |
-| GitHub Packages | The same ZIP is published as the Maven artifact `io.github.bobo8886:noel-atelier:1.1.0`. For a download without signing in, use Releases. [Package registry](https://github.com/users/bobo8886/packages?repo_name=noel-atelier) · [Releases](https://github.com/bobo8886/noel-atelier/releases/latest) |
+| GitHub Packages | The same ZIP is published as the Maven artifact `io.github.bobo8886:noel-atelier:1.2.0`. For a download without signing in, use Releases. [Package registry](https://github.com/users/bobo8886/packages?repo_name=noel-atelier) · [Releases](https://github.com/bobo8886/noel-atelier/releases/latest) |
 
 To run the source edition, open the directory containing `server.mjs` and run the following command with Node.js installed. On Windows, you can also double-click `启动圣诞工坊.cmd`.
 
@@ -65,4 +71,4 @@ npm run build
 
 ## License and credits
 
-Original code, artwork and the ribbon-tree mark are released under the MIT License. Three.js, MediaPipe, Phosphor Icons, Cormorant Garamond and DM Sans keep their respective licenses. [MIT License](./LICENSE) · [Third-party notices](./THIRD_PARTY_NOTICES.md)
+Original code, artwork, the ribbon-tree mark, the score and the recording of *Lamplight on Snow* are released under the MIT License. Three.js, MediaPipe, Phosphor Icons, LXGW WenKai, Cormorant Garamond and DM Sans keep their respective licenses. [MIT License](./LICENSE) · [Third-party notices](./THIRD_PARTY_NOTICES.md)

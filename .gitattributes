@@ -1,6 +1,7 @@
 * text=auto eol=lf
 *.cmd text eol=crlf
 *.woff2 binary
+*.mp3 binary
 *.wasm binary
 *.task binary
 *.png binary

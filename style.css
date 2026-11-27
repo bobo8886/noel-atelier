@@ -1,6 +1,20 @@
 @font-face{font-family:Cormorant;src:url(assets/fonts/serif.woff2);font-weight:600;font-display:swap}
 @font-face{font-family:Cormorant;src:url(assets/fonts/italic.woff2);font-weight:500;font-style:italic;font-display:swap}
 @font-face{font-family:DM;src:url(assets/fonts/sans.woff2);font-weight:500;font-display:swap}
+@font-face {
+  font-family: "Noel Letter Hand";
+  src: url(assets/fonts/letter-hand.woff2) format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+00B7,U+2000-206F,U+3000-303F,U+3400-9FFF,U+FF00-FFEF;
+}
+:root {
+  --letter-hand: "Noel Letter Hand", "Kaiti SC", STKaiti, KaiTi, Cormorant, Georgia, serif;
+  --letter-reading: Georgia, "Songti SC", STSong, "Noto Serif CJK SC", "Noto Serif SC", SimSun, "Noel Letter Hand", serif;
+}
+html:lang(en) {
+  --letter-hand: Cormorant, "Noel Letter Hand", "Kaiti SC", KaiTi, Georgia, serif;
+}
 :root{color-scheme:dark;--cream:#f5ead2;--champagne:#dfbd82;--muted:#bbc7b6;--cn:"Songti SC","Noto Serif CJK SC",SimSun,serif;--serif:Cormorant,Georgia,serif;font-family:DM,"Microsoft YaHei","PingFang SC",sans-serif;color:var(--cream);background:#071619}
 *{box-sizing:border-box}body{margin:0}[hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;-webkit-tap-highlight-color:transparent}
@@ -19,6 +33,12 @@ button:disabled{cursor:wait;opacity:.6}
 header{position:absolute;top:clamp(28px,4.2vh,49px);left:clamp(32px,3.5vw,64px);right:clamp(32px,3.5vw,64px);z-index:6;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
 .tools,.tools button,.monogram,.gold-button,.dock,.modes,.modes button,.finish,.letter-actions{display:flex;align-items:center;justify-content:center}
 .tools{gap:9px;pointer-events:auto}
+.sound-name { font:500 12px DM,"Microsoft YaHei",sans-serif; white-space:nowrap; }
+@media(min-width:761px){
+  .tools #sound{padding-inline:12px;gap:7px}
+  #sound[aria-pressed=true] .sound-name{color:#f2d7a4}
+}
+@media(max-width:760px){.sound-name{display:none}}
 .tools button{height:36px;min-width:36px;gap:8px;border:1px solid #dccaa63a;border-radius:24px;color:#e3dbbf;background:#1023236b;transition:background .2s}
 .tools button:hover,.tools button[aria-pressed=true]{background:#354740}
 .tools #camera{padding:0 13px;font-size:12px}

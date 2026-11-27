@@ -9,7 +9,7 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 const mime = {
   '.html':'text/html; charset=utf-8', '.css':'text/css', '.js':'text/javascript',
   '.mjs':'text/javascript', '.svg':'image/svg+xml', '.webp':'image/webp',
-  '.woff2':'font/woff2', '.wasm':'application/wasm', '.task':'application/octet-stream'
+  '.woff2':'font/woff2', '.wasm':'application/wasm', '.task':'application/octet-stream', '.mp3':'audio/mpeg'
 };
 const server = http.createServer(async (req, res) => {
   try {

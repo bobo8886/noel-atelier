@@ -8,6 +8,7 @@ The MIT license in the project root covers Noël Atelier’s original code and a
 | Phosphor Icons | SVG icons under `assets/icons/` | [MIT, Phosphor Icons](assets/icons/LICENSE.txt) |
 | Cormorant Garamond | `assets/fonts/serif.woff2`, `assets/fonts/italic.woff2` | [SIL Open Font License 1.1, The Cormorant Project Authors](assets/fonts/Cormorant-LICENSE.txt) |
 | DM Sans | `assets/fonts/sans.woff2` | [SIL Open Font License 1.1, The DM Sans Project Authors](assets/fonts/DM-Sans-LICENSE.txt) |
+| LXGW WenKai Regular v1.530 | `assets/fonts/letter-hand.woff2`, a web subset for Chinese correspondence | [SIL Open Font License 1.1, LXGW and the Klee Project Authors](assets/fonts/WenKai-LICENSE.txt) · [Upstream release](https://github.com/lxgw/LxgwWenKai/releases/tag/v1.530) |
 | MediaPipe Tasks Vision 0.10.22-rc.20250304 | `assets/vision/vision_bundle.mjs`, JavaScript loaders and WebAssembly binaries in `assets/vision/wasm/` | [Apache License 2.0 and upstream notices](assets/vision/LICENSE.txt) |
 | MediaPipe Gesture Recognizer, float16 version 1 | `assets/vision/gesture_recognizer.task` | [Apache License 2.0](assets/vision/LICENSE.txt) |
 | esbuild | Development dependency for rebuilding the portable HTML | [MIT, Evan Wallace](https://github.com/evanw/esbuild/blob/main/LICENSE.md) |

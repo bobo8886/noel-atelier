@@ -6,6 +6,7 @@ import {createWishNote} from './assets/wish-note.js';
 import {createLetter} from './assets/letter.js';
 import {t} from './assets/i18n.js';
 import {bindInterfaceLanguage} from './assets/interface-language.js';
+import {createChristmasMusic} from './assets/christmas-music.js';
 
 const $=selector=>document.querySelector(selector);
 const modes=[...document.querySelectorAll('[data-effect]')];
@@ -64,37 +65,19 @@ function setPhase(phase){
   phaseLabels();
   if(film)$('.film-line span').style.transform='scaleX(0)';
 }
-const score=[72,76,79,0,81,79,76,0,74,77,81,0,79,76,72,0,69,72,76,0,77,76,74,0,71,74,77,0,76,74,72,0];
-let audio=null,musicOn=false,musicTimer=0;
-function bell(frequency,volume=.045,length=1.5){
-  if(!musicOn||!audio)return;
-  const now=audio.currentTime;
-  for(const [ratio,amp,tail] of [[1,1,1],[2.002,.25,.60],[3.99,.08,.32]]){
-    const osc=audio.createOscillator(),gain=audio.createGain();osc.frequency.value=frequency*ratio;
-    gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(volume*amp,now+.015);
-    gain.gain.exponentialRampToValueAtTime(.0001,now+length*tail);osc.connect(gain).connect(audio.destination);
-    osc.start(now);osc.stop(now+length*tail+.04);
-    osc.onended=()=>{osc.disconnect();gain.disconnect()};
-  }
-}
+const music=createChristmasMusic();
+const bell=(frequency,volume,length)=>music.chime(frequency,volume,length);
 function soundLabel(){
-  const label=musicOn?t('关闭音乐','Turn music off'):t('开启音乐','Turn music on');sound.title=label;sound.setAttribute('aria-label',label);
-  sound.setAttribute('aria-pressed',String(musicOn));sound.firstElementChild.className='icon '+(musicOn?'audible':'muted');
+  const label=music.active?t('暂停《灯影落在雪上》','Pause Lamplight on Snow'):t('播放《灯影落在雪上》','Play Lamplight on Snow');
+  sound.title=label;sound.setAttribute('aria-label',label);
+  sound.querySelector('.sound-name').textContent=music.active?t('灯影落在雪上','Lamplight on Snow'):t('听配乐','Play music');
+  sound.setAttribute('aria-pressed',String(music.active));sound.firstElementChild.className='icon '+(music.active?'audible':'muted');
 }
-function quiet(){musicOn=false;clearTimeout(musicTimer);soundLabel();audio?.suspend().catch(()=>{})}
+function quiet(){music.pause();soundLabel();}
 sound.addEventListener('click',async()=>{
-  if(musicOn){quiet();return}
+  if(music.active){quiet();return;}
   try{
-    audio??=new (window.AudioContext||window.webkitAudioContext)();musicOn=true;await audio.resume();if(!musicOn)return;
-    soundLabel();let bar=0;
-    function next(){
-      if(!musicOn)return;
-      const midi=score[bar%score.length];
-      if(midi)bell(440*2**((midi-69)/12),.034,1.9);
-      if(bar%8===0)bell([130.81,146.83,110,123.47][(bar/8)%4],.022,2.3);
-      bar++;musicTimer=setTimeout(next,bar%8===0?860:455);
-    }
-    next();
+    const started=music.start();soundLabel();await started;
   }catch{quiet();notify('浏览器未能播放音乐','Your browser couldn’t play the music.')}
 });
 function updateMode(next){
@@ -277,7 +260,7 @@ const dialogsObserver=new MutationObserver(resumeScene);
 for(const dialog of document.querySelectorAll('dialog'))dialogsObserver.observe(dialog,{attributes:true,attributeFilter:['open']});
 function suspend(){
   cancelAnimationFrame(raf);raf=0;lastFrame=null;pointer=null;keyboardCharge=false;cancelCharge();
-  hands.stop();if(musicOn)quiet();
+  hands.stop();if(music.active)quiet();
 }
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden)suspend();else resumeScene();

@@ -31,7 +31,7 @@ const styles = [];
 let shell = index;
 // Include the copyright notices in every offline gift, including later replies.
 const licenses = ['LICENSE', 'assets/LICENSE', 'assets/icons/LICENSE.txt',
-  'assets/fonts/Cormorant-LICENSE.txt', 'assets/fonts/DM-Sans-LICENSE.txt'];
+  'assets/fonts/Cormorant-LICENSE.txt', 'assets/fonts/DM-Sans-LICENSE.txt', 'assets/fonts/WenKai-LICENSE.txt'];
 const notice = (await Promise.all(licenses.map(async file =>
   file + '\n\n' + await fs.readFile(path.join(source, file), 'utf8')))).join('\n\n');
 shell = shell.replace('</head>', () => '<script type="text/plain" id="gift-licenses">' +

@@ -1,8 +1,14 @@
-/* A lined correspondence sheet beside its envelope on a green writing mat. */
+/* Warm cotton paper, a green writing mat and the same ink as the finished letter. */
 #gift-desk {
-  width: min(916px, calc(100% - 38px)); border-radius: 8px; border-color: #bfa777;
-  background: #eee0c3; box-shadow: 0 32px 110px #020808d9, 0 3px 10px #0008;
+  --reply-hand: var(--letter-hand, Cormorant, "Kaiti SC", KaiTi, var(--cn));
+  --reply-reading: var(--letter-reading, Georgia, "Songti SC", SimSun, serif);
+  --reply-ink: #233e35; --reply-berry: #753e4c; --reply-stock: #f8f5eb;
+  --reply-leading: 1.82em; --reply-lines: 3; --reply-max-lines: 7;
+  width: min(944px, calc(100% - 38px)); border-radius: 6px; border-color: #bbb29c;
+  background: var(--reply-stock); box-shadow: 0 32px 110px #020808d9, 0 3px 10px #0008;
+  scroll-padding-block: 48px 16px;
 }
+html:lang(en) #gift-desk { --reply-leading: 1.62em; }
 #gift-form { grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); }
 .reply-tools {
   position: sticky; top: 9px; grid-area: 1/1/-1/-1; z-index: 8; align-self: start; justify-self: end;
@@ -15,50 +21,66 @@
 #gift-desk .reply-tools :is(.dialog-language, #desk-close):hover { border-color: #ab976b88; background: #fff7e4; }
 #gift-desk .reply-tools #desk-close { width: 36px; }
 #gift-desk .desk-writing {
-  min-height: 460px; padding: 49px clamp(25px, 4.4vw, 54px) 30px;
-  background: repeating-linear-gradient(22deg, #a3844d08 0 .6px, transparent .7px 4px),
-    linear-gradient(105deg, #dfcfad, #f7ecd2 6%, #fbf3df 42%, #efe1c2);
-  box-shadow: inset 5px 0 14px -11px #4a3219;
+  min-height: 485px; padding: 31px clamp(25px, 4.3vw, 53px) 27px;
+  background: repeating-linear-gradient(34deg, #9c8d7308 0 .5px, transparent .7px 4px),
+    radial-gradient(ellipse at 67% 24%, #fffdf7 0, #faf7ef 56%, #eee9dc 100%);
+  box-shadow: inset 5px 0 12px -10px #4551456b;
 }
+.reply-heading { display:flex; align-items:center; flex-direction:column; gap:9px; margin-bottom: 19px; }
+.reply-imprint { display:grid; place-items:center; width:27px; height:31px; color:#4d6a59; border:1px solid #8e9c7e;
+  outline:1px solid #b5b9a44f; outline-offset:2px; border-radius:48% 48% 42% 42%; transform:rotate(-4deg); }
+#gift-desk .reply-imprint .fir { width:16px; height:18px; }
 #gift-desk #desk-title {
-  position: relative; width: fit-content; margin: 0 0 24px; color: #355141;
-  font: 600 clamp(27px, 3vw, 37px)/1.28 var(--cn); letter-spacing: .04em;
+  width: fit-content; margin: 0; color: var(--reply-ink); text-align:center; text-wrap:balance;
+  font: 500 clamp(25px, 2.75vw, 34px)/1.22 var(--reply-hand); letter-spacing: .035em;
 }
-html:lang(en) #gift-desk #desk-title { font: 600 clamp(38px, 4.3vw, 51px)/.96 var(--serif); letter-spacing: -.047em; }
+html:lang(en) #gift-desk #desk-title { font: 600 clamp(36px, 3.75vw, 46px)/1 var(--serif); letter-spacing: -.032em; }
 #gift-desk #desk-title:focus { outline: none; }
 .reply-paper {
-  position: relative; min-width: 0; padding: 18px 1px 17px; border-top: 1px solid #a78f5b85;
-  border-bottom: 1px solid #bba57590;
+  position: relative; min-width: 0; padding: 20px 0 19px;
+  border-block-start: 1px solid #8c9a8857; border-block-end: 1px solid #8c9a883d;
 }
-.reply-paper::before {
-  content: ''; position: absolute; top: -3px; left: 0; width: 26px; height: 5px;
-  background: linear-gradient(90deg, #ac8f54 65%, transparent 65% 73%, #ac8f54 73%);
-}
-#gift-desk :is(.reply-address, .reply-signature) { display: flex; align-items: baseline; gap: 7px; }
-#gift-desk :is(.reply-address, .reply-signature) > span { flex: none; color: #805041; font: 500 18px/1.4 var(--cn); }
-html:lang(en) #gift-desk :is(.reply-address, .reply-signature) > span { font: 500 italic 27px/1 var(--serif); }
+#gift-desk :is(.reply-address, .reply-signature) { display: flex; align-items: baseline; gap: .22em; }
+#gift-desk :is(.reply-address, .reply-signature) > span { flex: none; color: var(--reply-ink); font: 500 23px/1.42 var(--reply-hand); }
+html:lang(en) #gift-desk :is(.reply-address, .reply-signature) > span { font: 500 italic 31px/1.14 var(--reply-hand); }
 #gift-desk .reply-paper input {
   display: inline-block; width: 10.5em; min-width: 0; margin: 0; padding: 1px 2px 2px;
-  font: 500 16px/1.5 var(--cn); color: #233f35; border-bottom: 1px solid #aea0809c;
+  font: 500 21px/1.43 var(--reply-hand); color: var(--reply-ink); border-bottom: 1px dotted #9d9c85;
 }
-#gift-desk .reply-paper input::placeholder, #gift-desk .reply-paper textarea::placeholder { color: #737362; opacity: 1; }
+#gift-desk .reply-paper input::placeholder, #gift-desk .reply-paper textarea::placeholder { color: #6f786b; opacity: 1; }
+#gift-desk .reply-paper input::placeholder { font-size: .84em; }
+html:lang(en) #gift-desk .reply-paper input { font-family: var(--reply-hand); font-size:26px; font-style:italic; }
 #gift-desk .reply-address .address-comma { margin-left: -5px; }
-#gift-desk .message-line { margin: 16px 0 0; }
+#gift-desk .message-line { position:relative; margin: 14px 0 0; }
 #gift-desk .message-line textarea {
-  display: block; margin: 0; height: 96px; min-height: 0; border: 0; border-radius: 0; padding: 0 3px;
-  background: repeating-linear-gradient(to bottom, transparent 0 31px, #ad9b7554 31px 32px) local;
-  color: #2e4738; font: 500 17px/32px var(--cn); resize: none;
-  scrollbar-width: thin; scrollbar-color: #b5a17a transparent;
+  display:block; margin:0; padding: 3px 4px; border: 0; border-radius:2px;
+  box-sizing:content-box; width:calc(100% - 8px); height:calc(var(--reply-leading) * var(--reply-lines));
+  min-height:calc(var(--reply-leading) * var(--reply-lines)); max-height:calc(var(--reply-leading) * var(--reply-max-lines));
+  background: transparent; color: #2c4138; caret-color: var(--reply-berry); resize: none;
+  font:400 clamp(16px,1.65vw,18px)/var(--reply-leading) var(--reply-reading);
+  letter-spacing:.012em; line-break:strict; word-break:normal; overflow-wrap:anywhere;
+  scrollbar-width: thin; scrollbar-color: #a6af9d transparent;
 }
-#gift-desk :is(.reply-paper input, .reply-paper textarea):focus-visible {
-  outline: 2px solid #8c744c; outline-offset: 3px; border-radius: 1px;
+html:lang(en) #gift-desk .message-line textarea { letter-spacing: normal; }
+#gift-desk .reply-paper input:focus-visible {
+  outline: 2px solid transparent; border-bottom: 2px solid var(--reply-berry); padding-bottom: 1px;
+  background: linear-gradient(0deg,#e8dce01c,transparent 73%);
 }
-#reply-count { display: block; margin: 5px 0 13px; color: #71694f; text-align: right; font: 500 11px/1.2 DM, sans-serif; font-variant-numeric: tabular-nums; }
-#reply-count[data-full=true] { color: #8b4d3c; }
+#gift-desk .reply-paper textarea:focus-visible { outline: 2px solid transparent; }
+#gift-desk .message-line:focus-within textarea { background: linear-gradient(90deg,#fffcf5a6,transparent 90%); }
+.message-line:focus-within::before {
+  content:''; position:absolute; z-index:1; top:4px; bottom:4px; left:-6px; width:2px; pointer-events:none;
+  background:var(--reply-berry); border-radius:2px;
+}
+@media (forced-colors:active) {
+  #gift-desk :is(.reply-paper input,.reply-paper textarea):focus-visible { outline-color:Highlight; }
+}
+#reply-count { display: block; margin: 5px 2px 11px; color: #667366; text-align: right; font: 500 11px/1.2 DM, sans-serif; font-variant-numeric: tabular-nums; }
+#reply-count[data-full=true] { color: var(--reply-berry); }
 #gift-desk .reply-signature { justify-content: flex-end; }
-#gift-desk .reply-signature input { width: 10.1em; }
-#gift-desk .reply-signature > span { font-size: 14px; }
-html:lang(en) #gift-desk .reply-signature > span { font-size: 22px; }
+#gift-desk .reply-signature input { width: 10.1em; color: var(--reply-berry); font-size:21px; }
+#gift-desk .reply-signature > span { font-size: 17px; color: var(--reply-berry); }
+html:lang(en) #gift-desk .reply-signature > span { font-size: 24px; }
 .sr-stationery { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .reply-post { margin-top: 19px; }
 #gift-desk #seal-gift {
@@ -71,32 +93,33 @@ html:lang(en) #gift-desk .reply-signature > span { font-size: 22px; }
 #gift-form[data-phase=failed] #desk-status { color: #884839; }
 
 #gift-desk .envelope-pane {
-  padding: 0; border-right: 1px solid #b49a6a;
-  background: repeating-linear-gradient(115deg, #d3bf8207 0 1px, transparent 1px 4px),
-    radial-gradient(ellipse at 34% 29%, #3d6351, #24493e 49%, #16372f 85%);
+  padding: 0; border-right: 1px solid #8a9c8a;
+  background: repeating-linear-gradient(115deg, #c8c6b707 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at 34% 29%, #406253, #274b40 49%, #183a30 85%);
 }
-#gift-desk .envelope-pane::before { inset: 14px; border-color: #c4ae7653; outline-offset: 4px; }
-#gift-desk .envelope-model { width: min(76%, 260px); margin: 32% 0 0; transform: rotate(-7deg); }
+#gift-desk .envelope-pane::before { inset: 14px; border-color: #c5c9ab60; outline-offset: 4px; }
+#gift-desk .envelope-model { width: min(79%, 281px); margin: 32% 0 0; transform: rotate(-5deg); }
 #gift-desk .note-slip {
-  left: 7%; width: 86%; height: 135%; bottom: 24%; padding: 9px 9% 5px;
+  left: 5.5%; width: 89%; height: 145%; bottom: 24%; padding: 10px 8% 5px;
   display: flex; flex-direction: column; align-items: flex-start; text-align: left;
-  transform: rotate(4deg); outline-offset: -5px; color: #513e2c;
-  background: repeating-linear-gradient(21deg, #b7955e09 0 .5px, transparent .7px 4px),
-    linear-gradient(120deg, #fff6df, #f0e0ba 78%, #e2cda6);
+  transform: rotate(3deg); outline-color:#c0b9a5a0; outline-offset: -5px; border-color:#c8c3b5; color: var(--reply-ink);
+  background: repeating-linear-gradient(24deg, #a7a48709 0 .5px, transparent .7px 4px),
+    linear-gradient(120deg, #fffcf5, #f7f3e7 73%, #e4dfd2);
 }
-#gift-desk .note-slip .fir { align-self: center; margin: 3% auto 4%; width: 16px; height: 16px; flex-shrink: 0; color: #8b7649; }
+#gift-desk .note-slip .fir { align-self: center; margin: 3% auto 5%; width: 16px; height: 16px; flex-shrink: 0; color: #5f7560; }
 #gift-desk #slip-name {
-  max-width: 100%; padding: 0; color: #754a3c; font: 600 clamp(15px, 1.65vw, 22px)/1.3 var(--cn);
-  text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
+  max-width: 100%; padding:0; color:var(--reply-ink); font:500 clamp(15px, 1.65vw, 21px)/1.36 var(--reply-hand);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; white-space:normal; overflow-wrap:anywhere; overflow:hidden;
 }
-html:lang(en) #gift-desk #slip-name { font: 500 italic clamp(21px, 2.7vw, 34px)/1 var(--serif); }
+html:lang(en) #gift-desk #slip-name { font: 500 italic clamp(21px, 2.25vw, 28px)/1.12 var(--reply-hand); }
 #slip-words {
-  flex-shrink: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  max-width: 100%; margin: 6px 0 0; color: #4f5647;
-  font: 500 clamp(11px, 1.05vw, 13px)/1.55 var(--cn); overflow-wrap: anywhere; white-space: pre-line;
+  flex-shrink:0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  max-width:100%; margin:7px 0 0; color:#435349;
+  font:400 clamp(11px,1.04vw,13px)/1.55 var(--reply-reading); overflow-wrap:anywhere; white-space:pre-wrap; line-break:strict;
 }
-.reply-ink-rule { width: 16%; flex: 0 0 1px; margin: 7px 0 3px; background: #aa9365a8; }
-#slip-from { max-width: 100%; color: #775949; font: italic 500 13px/1.3 var(--serif),var(--cn); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reply-ink-rule { align-self:center; width:15%; flex:0 0 1px; margin:6px 0 3px; background:#a38a8f90; }
+#slip-from { align-self:center; max-width:76%; color:var(--reply-berry); font:500 14px/1.32 var(--reply-hand); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html:lang(en) #slip-from { font-style:italic; font-size:17px; }
 #gift-desk .envelope-front { background: linear-gradient(150deg, #749080, #42674e 40%, #294f3c 88%); }
 #gift-form[data-sealed=true] .envelope-model { transform: translateY(-12%) rotate(-4deg); }
 #gift-desk #gift-form[data-sealed=true] .note-slip { transform: translateY(54%) rotate(0); clip-path: inset(0 0 44%); }
@@ -118,6 +141,8 @@ html:lang(en) #gift-desk #slip-name { font: 500 italic clamp(21px, 2.7vw, 34px)/
   @keyframes reply-desk-arrive { from { translate: 0 5px; } }
   #gift-desk[open] .reply-paper { animation: reply-paper-arrive .42s cubic-bezier(.19,.7,.29,1) both; transform-origin: 0 50%; }
   @keyframes reply-paper-arrive { from { transform: translateY(4px) rotate(-.4deg); } }
+  .message-line:focus-within::before { transform-origin: top; animation: reply-ink-margin .24s ease-out both; }
+  @keyframes reply-ink-margin { from { transform:scaleY(.28); } }
   #gift-desk #gift-form[data-sealed=true] .wax-mark::after { content:''; position:absolute; inset:-3px; border:1px solid #d9b573; border-radius:50%; pointer-events:none; animation: wax-glint .46s .86s both; }
   @keyframes wax-glint { from {opacity:0; transform:scale(.67);} 24% { opacity:.72; } to {opacity:0; transform:scale(1.23);} }
 }
@@ -125,15 +150,15 @@ html:lang(en) #gift-desk #slip-name { font: 500 italic clamp(21px, 2.7vw, 34px)/
   #gift-desk { width: min(435px,calc(100% - 18px)); max-height: calc(100dvh - 14px); }
   #gift-form { grid-template: auto auto / minmax(0,1fr); }
   #gift-desk .reply-tools { margin: 7px 7px 0 0; top: 6px; }
-  #gift-desk .reply-tools :is(.dialog-language, #desk-close) { background: #214237; color: #f8edcf; border-color: #ab9b7266; }
+  #gift-desk .reply-tools :is(.dialog-language, #desk-close) { background: #214237; color: #f9f6ed; border-color: #a5b59880; }
   #gift-desk .reply-tools :is(.dialog-language, #desk-close):hover { background: #2b4b3c; }
-  #gift-desk .envelope-pane { height: 151px; border: 0; border-bottom: 1px solid #a28d60; }
+  #gift-desk .envelope-pane { height: 133px; border: 0; border-bottom: 1px solid #899780; }
   #gift-desk .envelope-pane::before { inset: 8px; outline: 0; }
-  #gift-desk .envelope-model { width: 123px; margin: 40px 0 0; }
-  #gift-desk .note-slip { padding: 6px 8% 2px; bottom: 23%; }
+  #gift-desk .envelope-model { width: 154px; margin: 30px 0 0; }
+  #gift-desk .note-slip { height:118%; bottom:17%; padding: 7px 7% 2px; }
   #gift-desk .note-slip .fir { display:none; }
-  #gift-desk #slip-name { font-size: 12px; }
-  html:lang(en) #gift-desk #slip-name { font-size: 18px; }
+  #gift-desk #slip-name { display:block; white-space:nowrap; text-overflow:ellipsis; flex:none; font-size: 12px; }
+  html:lang(en) #gift-desk #slip-name { font-size: 17px; }
   #slip-words { margin-top: 3px; font-size: 9px; line-height: 1.25; }
   .reply-ink-rule { margin: 4px 0 1px; }
   #slip-from { font-size: 10px; }
@@ -141,53 +166,64 @@ html:lang(en) #gift-desk #slip-name { font: 500 italic clamp(21px, 2.7vw, 34px)/
   .reply-pen { left: 68%; width: 18%; bottom: 23%; transform: rotate(-29deg); height: 5px; }
   .reply-pen::after { height: 7px; width:12px; }
   .reply-pen i { width:21px; height:10px; }
-  #gift-desk .desk-writing { min-height: 0; padding: 23px clamp(20px, 7vw, 35px) 21px; }
-  #gift-desk #desk-title { font-size: 25px; margin-bottom: 15px; }
-  html:lang(en) #gift-desk #desk-title { font-size: 34px; }
+  #gift-desk .desk-writing { min-height: 0; padding: 19px clamp(17px, 6vw, 31px) 18px; }
+  .reply-heading { flex-direction:row; justify-content:center; gap:9px; margin-bottom:12px; }
+  .reply-imprint { width:19px; height:22px; } #gift-desk .reply-imprint .fir { width:11px; height:14px; }
+  #gift-desk #desk-title { font-size: 25px; } html:lang(en) #gift-desk #desk-title { font-size: 32px; }
   .reply-paper { padding-top: 13px; padding-bottom: 14px; }
   #gift-desk .message-line { margin-top: 11px; }
-  #gift-desk .message-line textarea { height: 84px; line-height:28px; font-size:16px; background-size:100% 28px; background-image:linear-gradient(to bottom, transparent 27px,#ad9b7554 27px); }
+  #gift-desk .message-line textarea { font-size:16px; }
+  #gift-desk .reply-address > span, #gift-desk .reply-address input { font-size:21px; }
+  html:lang(en) #gift-desk .reply-address > span, html:lang(en) #gift-desk .reply-address input { font-size:26px; }
   #reply-count { margin-bottom: 9px; }
   .reply-post { margin-top: 15px; }
 }
 @media (max-width:680px) and (max-height:650px) {
   #gift-desk .envelope-pane { height: 103px; }
-  #gift-desk .envelope-model { width: 85px; margin-top: 26px; }
-  #gift-desk .note-slip { padding-top:3px; }
-  #slip-words { -webkit-line-clamp: 1; } .reply-ink-rule, #slip-from { visibility:hidden; }
+  #gift-desk .envelope-model { width: 125px; margin-top: 23px; }
+  #gift-desk .note-slip { height:112%; bottom:14%; padding-top:5px; }
+  #slip-words { -webkit-line-clamp: 2; } .reply-ink-rule, #slip-from { visibility:hidden; }
   #gift-desk .wax-mark { width: 18px; } #gift-desk .wax-mark .fir { width:9px; height:9px; }
-  #gift-desk .desk-writing { padding-block:16px; } #gift-desk #desk-title { margin-bottom:12px; }
+  #gift-desk .desk-writing { padding-block:16px; }
 }
 @media (max-height:440px) and (min-width:681px) {
   #gift-desk .desk-writing { min-height:0; padding:22px 30px 16px; }
-  #gift-desk #desk-title { margin-bottom:13px; } html:lang(en) #gift-desk #desk-title { font-size:34px; }
+  #gift-desk { --reply-lines:2; --reply-max-lines:4; }
+  .reply-heading { flex-direction:row; justify-content:center; gap:8px; margin-bottom:12px; }
+  #gift-desk .reply-imprint { width:17px; height:20px; } #gift-desk .reply-imprint .fir { width:10px; height:12px; }
+  html:lang(en) #gift-desk #desk-title { font-size:32px; }
   .reply-paper { padding-block:10px; } #gift-desk .message-line { margin-top:7px; }
-  #gift-desk .message-line textarea { height:64px; }
   #reply-count { margin-bottom:5px; } .reply-post { margin-top:11px; }
 }
 @supports (field-sizing: content) {
   #gift-desk .reply-paper input { field-sizing: content; width: auto; min-width: 1.7em; max-width: 76%; }
-  #gift-desk .message-line textarea { field-sizing: content; height: auto; min-height: 96px; max-height: 192px; }
-  @media (max-width:680px) {
-    #gift-desk .message-line textarea { min-height: 84px; max-height: 168px; }
-  }
-  @media (max-height:440px) and (min-width:681px) {
-    #gift-desk .message-line textarea { min-height: 64px; max-height: 96px; }
-  }
+  #gift-desk .message-line textarea { field-sizing:content; height:auto; }
 }
 @media (min-width:520px) and (max-width:680px) and (max-height:460px) {
-  #gift-desk { width: calc(100% - 16px); }
+  #gift-desk { width: calc(100% - 16px); --reply-lines:2; --reply-max-lines:4; }
   #gift-form { grid-template: auto / minmax(105px,.46fr) minmax(0,1fr); }
   #gift-desk .envelope-pane { grid-area: 1/1; height: auto; border: 0; border-right: 1px solid #b49a6a; }
   #gift-desk .envelope-model { width: 78%; margin: 25% 0 0; }
   .reply-pen { left: 42%; bottom: 14%; width: 39%; }
   #gift-desk .desk-writing { grid-area: 1/2; padding: 18px 18px 12px; }
-  #gift-desk #desk-title { max-width: calc(100% - 63px); font-size: 20px; margin-bottom: 10px; }
+  .reply-heading { justify-content:flex-start; padding-right:62px; margin-bottom:10px; }
+  #gift-desk #desk-title { font-size: 20px; }
   html:lang(en) #gift-desk #desk-title { font-size: 29px; }
-  #gift-desk .reply-tools :is(.dialog-language,#desk-close) { background: #f5ebd3; border-color: transparent; color: #415342; }
+  #gift-desk .reply-tools :is(.dialog-language,#desk-close) { background: #f6f4ec; border-color: transparent; color: #415342; }
   .reply-paper { padding-block: 8px; }
   #gift-desk .message-line { margin-top: 7px; }
-  #gift-desk .message-line textarea { min-height: 56px; max-height: 84px; }
   #reply-count { margin-bottom: 5px; }
   .reply-post { margin-top: 10px; } #gift-desk #desk-status { margin-top: 6px; }
+}
+/* Mobile browsers may shrink only the visual viewport when the keyboard opens. */
+#gift-desk[data-keyboard] {
+  inset-block:var(--reply-top) auto; margin:3px auto 0; max-height:calc(var(--reply-visible) - 7px);
+  --reply-lines:2; --reply-max-lines:5;
+}
+@media (max-width:680px) and (max-aspect-ratio:1/1) {
+  #gift-desk[data-keyboard] .envelope-pane { display:none; }
+  #gift-desk[data-keyboard] #gift-form { grid-template: auto / minmax(0,1fr); }
+  #gift-desk[data-keyboard] .desk-writing { grid-area:1/1; padding-block:14px; }
+  #gift-desk[data-keyboard] .reply-heading { justify-content:flex-start; padding-right:74px; }
+  #gift-desk[data-keyboard] .reply-tools :is(.dialog-language,#desk-close) { background:#f6f4ec; color:var(--reply-ink); }
 }

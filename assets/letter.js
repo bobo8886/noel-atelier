@@ -13,6 +13,20 @@ const greeting = name => name ? t('亲爱的' + name + '：', 'Dear ' + name + '
 const signature = name => name ? t('来自 ' + name, 'With love, ' + name) : defaultSignature;
 const wishLine = wish => t('今晚的心愿 · ', 'Tonight’s wish · ') + wish;
 
+function setLetterParagraphs(node, text) {
+  if (node.textContent === text) return;
+  const paragraphs = document.createDocumentFragment();
+  for (const [index, line] of text.split('\n').entries()) {
+    if (index) {
+      const separator = document.createElement('span');
+      separator.hidden = true; separator.textContent = '\n'; paragraphs.append(separator);
+    }
+    const paragraph = document.createElement('span');
+    paragraph.className = 'folio-paragraph'; paragraph.textContent = line; paragraphs.append(paragraph);
+  }
+  node.replaceChildren(paragraphs);
+}
+
 function readGift() {
   const node = field('gift-message');
   let data;
@@ -29,9 +43,29 @@ function bindDesk(gift) {
   const dialog = field('gift-desk'), form = field('gift-form');
   const to = field('gift-to'), from = field('gift-from'), words = field('gift-words');
   const seal = field('seal-gift'), status = field('desk-status');
+  const viewport = window.visualViewport;
+  const growsNatively = CSS.supports('field-sizing', 'content');
   let busy = false, phase = 'ready', invalid = false, replying = false;
   to.value = gift.from;
   from.value = gift.to;
+  function fitDraft() {
+    if (growsNatively || !dialog.open) return;
+    words.style.height = '0px';
+    const style = getComputedStyle(words);
+    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    words.style.height = Math.ceil(words.scrollHeight - padding) + 'px';
+  }
+  function fitViewport() {
+    const editing = [to, words, from].includes(document.activeElement);
+    const keyboard = Boolean(editing && viewport && viewport.scale <= 1.05 &&
+      window.innerHeight - viewport.height > 105);
+    dialog.toggleAttribute('data-keyboard', keyboard);
+    if (keyboard) {
+      dialog.style.setProperty('--reply-visible', Math.floor(viewport.height) + 'px');
+      dialog.style.setProperty('--reply-top', Math.max(0, Math.round(viewport.offsetTop)) + 'px');
+    }
+    fitDraft();
+  }
   function localize() {
     words.placeholder = blessing();
     field('desk-title').textContent = replying ? t('写一封回信', 'A letter in return') : t('写一封圣诞信', 'A Christmas letter');
@@ -59,6 +93,7 @@ function bindDesk(gift) {
       failed: t('下载未完成，信还在这里。请再试一次。', 'Your letter is still here. Please try the download again.')
     };
     if (status.textContent !== feedback[phase]) status.textContent = feedback[phase];
+    fitDraft();
   }
   function update() {
     invalid = false;
@@ -70,6 +105,12 @@ function bindDesk(gift) {
   window.addEventListener('gift-languagechange', localize);
   form.addEventListener('input', update);
   to.addEventListener('invalid', () => { invalid = true; localize(); });
+  to.addEventListener('keydown', event => {
+    if (event.key === 'Enter' && !event.isComposing && event.keyCode !== 229) {
+      event.preventDefault();
+      words.focus();
+    }
+  });
   function open(event) {
     if (dialog.open) return;
     replying = event.currentTarget.id === 'regift';
@@ -78,7 +119,15 @@ function bindDesk(gift) {
     dialog.scrollTop = 0;
     const first = matchMedia('(pointer: coarse)').matches ? field('desk-title') : to;
     first.focus({preventScroll: true});
+    fitViewport();
+    viewport?.addEventListener('resize', fitViewport);
+    window.addEventListener('resize', fitViewport);
   }
+  dialog.addEventListener('close', () => {
+    dialog.removeAttribute('data-keyboard');
+    viewport?.removeEventListener('resize', fitViewport);
+    window.removeEventListener('resize', fitViewport);
+  });
   field('write-gift').addEventListener('click', open);
   field('regift').addEventListener('click', open);
   field('desk-close').addEventListener('click', () => dialog.close());
@@ -116,22 +165,40 @@ function bindDesk(gift) {
 }
 
 // Use exactly the same saved frame and wording for the on-screen and printed card.
+// Treat an opening mark and its word, or a word and its closing mark, as a unit.
+const closingMark = /^[\p{Pe}\p{Pf}、。，！？：；·…,.!?:;%％]/u;
+const openingMark = /^[\p{Ps}\p{Pi}]+$/u;
+function joinedTokens(parts) {
+  const tokens = [];
+  let prefix = '';
+  for (const part of parts) {
+    if (openingMark.test(part)) { prefix += part; continue; }
+    if (closingMark.test(part) && !prefix && tokens.length && tokens.at(-1).trim()) {
+      tokens[tokens.length - 1] += part;
+    } else {
+      tokens.push(prefix + part); prefix = '';
+    }
+  }
+  if (prefix) tokens.push(prefix);
+  return tokens;
+}
+
 function linesOf(ctx, text, maxWidth) {
   const lines = [];
   const segmenter = typeof Intl.Segmenter === 'function' ? new Intl.Segmenter(getLanguage(), {granularity: 'word'}) : null;
   const glyphs = segmenter && new Intl.Segmenter(getLanguage(), {granularity: 'grapheme'});
   for (const paragraph of text.split('\n')) {
-    const words = segmenter ? Array.from(segmenter.segment(paragraph), entry => entry.segment) : paragraph.match(/\s+|\S+/gu) || [];
+    const words = segmenter ? Array.from(segmenter.segment(paragraph), entry => entry.segment) : paragraph.match(/[A-Za-z0-9]+|\s+|./gu) || [];
     let line = '';
-    for (const word of words) {
+    for (const word of joinedTokens(words)) {
       if (line && ctx.measureText(line + word).width > maxWidth) {
         lines.push(line.trimEnd());
         line = '';
       }
       if (!line && !word.trim()) continue;
       if (ctx.measureText(word).width <= maxWidth) { line += word; continue; }
-      for (const part of glyphs ? glyphs.segment(word) : word) {
-        const glyph = glyphs ? part.segment : part;
+      const characters = glyphs ? Array.from(glyphs.segment(word), part => part.segment) : Array.from(word);
+      for (const glyph of joinedTokens(characters)) {
         if (line && ctx.measureText(line + glyph).width > maxWidth) { lines.push(line); line = ''; }
         line += glyph;
       }
@@ -146,7 +213,9 @@ async function savePostcard(photo, gift, wish) {
   const paper = document.createElement('canvas');
   paper.width = 1500;
   const ctx = paper.getContext('2d');
-  const serif = '"Songti SC", SimSun, Georgia, serif';
+  const styles = getComputedStyle(document.documentElement);
+  const serif = styles.getPropertyValue('--letter-reading').trim();
+  const handwriting = styles.getPropertyValue('--letter-hand').trim();
   const bodyFont = '33px ' + serif, wishFont = '28px ' + serif;
   ctx.font = bodyFont;
   const body = linesOf(ctx, letterBody(gift), 1280);
@@ -167,7 +236,7 @@ async function savePostcard(photo, gift, wish) {
   ctx.textAlign = 'center'; ctx.fillStyle = '#934239';
   ctx.font = 'italic 500 78px Cormorant, Georgia, serif'; ctx.fillText('Merry Christmas', 750, baseline);
   baseline += 49;
-  ctx.fillStyle = '#2d483d'; ctx.font = '600 32px ' + serif;
+  ctx.fillStyle = '#2d483d'; ctx.font = '400 38px ' + handwriting;
   ctx.fillText(greeting(gift.to), 750, baseline, 1280);
   ctx.font = bodyFont;
   for (const line of body) { baseline += 46; ctx.fillText(line, 750, baseline); }
@@ -175,7 +244,7 @@ async function savePostcard(photo, gift, wish) {
     baseline += 18; ctx.fillStyle = '#784958'; ctx.font = wishFont;
     for (const line of memory) { baseline += 40; ctx.fillText(line, 750, baseline); }
   }
-  ctx.fillStyle = '#556456'; ctx.font = gift.from ? '30px ' + serif : 'italic 500 39px Cormorant, Georgia, serif';
+  ctx.fillStyle = '#70414c'; ctx.font = gift.from ? '400 37px ' + handwriting : 'italic 500 39px Cormorant, Georgia, serif';
   ctx.fillText(signature(gift.from), 750, baseline + 62, 1280);
   await downloadPrint(paper, fileName);
 }
@@ -212,8 +281,10 @@ export function createLetter() {
       : t('一份圣诞礼物，只为你。', 'A Christmas gift, just for you.');
     document.title = gift.to ? t('送给' + gift.to, 'For ' + gift.to) + ' · Pour toi' : t('Pour toi · 一份圣诞礼物', 'Pour toi · A Christmas gift');
     field('card-to').textContent = greeting(gift.to);
-    field('card-body').textContent = letterBody(gift);
-    field('card-from').textContent = signature(gift.from);
+    setLetterParagraphs(field('card-body'), letterBody(gift));
+    const sender = field('card-from');
+    sender.lang = gift.from && getLanguage() === 'zh' ? 'zh-CN' : 'en';
+    sender.textContent = signature(gift.from);
     block.hidden = !wish;
     block.querySelector('span').textContent = wish ? wishLine(wish) : '';
     const labels = {

@@ -27,7 +27,7 @@
         <button type="button" class="language-switch" data-language-switch aria-label="切换到英语">EN</button>
         <button id="write-gift" data-en-title="Make a personal gift" data-en-label="Make a personal gift" title="制作专属礼物" aria-label="制作专属礼物" aria-haspopup="dialog"><i class="icon envelope"></i></button>
         <button id="camera" hidden aria-pressed="false" title="开启摄像头手势"><i class="icon video"></i><span>手势互动</span></button>
-        <button id="sound" aria-pressed="false" aria-label="开启音乐" title="开启音乐"><i class="icon muted"></i></button>
+        <button id="sound" aria-pressed="false" aria-label="播放《灯影落在雪上》" title="播放《灯影落在雪上》"><i class="icon muted"></i><span class="sound-name">听配乐</span></button>
         <button id="fullscreen" aria-label="进入全屏" title="进入全屏"><i class="icon expand"></i></button>
       </div>
     </header>
@@ -70,17 +70,19 @@
             <figcaption><h2 lang="en">Merry Christmas</h2></figcaption>
           </figure>
         </div>
-        <div class="card-writing">
+        <article class="card-writing" aria-labelledby="card-to">
           <div class="folio-letterhead">
-            <span class="folio-stationer" lang="fr"><i class="icon fir" aria-hidden="true"></i>Noël Atelier</span>
-            <div class="folio-postmark" aria-hidden="true"><span lang="fr">NOËL</span><b>25 XII</b></div>
+            <span class="folio-crest" aria-hidden="true"><i class="icon fir"></i></span>
+            <span class="folio-stationer" lang="fr">Noël Atelier</span>
           </div>
           <time class="folio-date" datetime="12-25" data-en="25 December">十二月二十五日</time>
-          <strong id="card-to">圣诞快乐</strong>
-          <p id="card-body"></p>
-          <em id="card-from">With love, Noël</em>
-          <blockquote id="card-wish" hidden><i class="icon wish" aria-hidden="true"></i><span></span></blockquote>
-        </div>
+          <div class="folio-correspondence">
+            <strong id="card-to" dir="auto">圣诞快乐</strong>
+            <div id="card-body" dir="auto"></div>
+            <em id="card-from" dir="auto">With love, Noël</em>
+          </div>
+          <blockquote id="card-wish" hidden><i class="icon wish" aria-hidden="true"></i><span dir="auto"></span></blockquote>
+        </article>
       </div>
       <div class="letter-actions">
         <div class="letter-download">
@@ -116,12 +118,15 @@
         <i class="reply-pen"><i></i></i>
       </div>
       <div class="desk-writing">
-        <h2 id="desk-title" tabindex="-1">写一封圣诞信</h2>
+        <div class="reply-heading">
+          <i class="reply-imprint" aria-hidden="true"><i class="icon fir"></i></i>
+          <h2 id="desk-title" tabindex="-1">写一封圣诞信</h2>
+        </div>
         <div class="reply-paper">
-          <label class="reply-address"><span data-en="Dear">亲爱的</span><input id="gift-to" name="to" maxlength="18" required placeholder="收礼人的名字" data-en-placeholder="Recipient’s name" autocomplete="off"><span class="address-comma" aria-hidden="true" data-en=",">：</span></label>
-          <label class="message-line"><span class="sr-stationery" data-en="Your message, up to 96 characters">写给对方的话，最多 96 字</span><textarea id="gift-words" name="message" rows="3" maxlength="96"></textarea></label>
+          <label class="reply-address"><span data-en="Dear">亲爱的</span><input id="gift-to" name="to" maxlength="18" required placeholder="收礼人的名字" data-en-placeholder="Recipient’s name" data-en-label="Recipient’s name" aria-label="收礼人的名字" autocomplete="off" autocapitalize="words" enterkeyhint="next"><span class="address-comma" aria-hidden="true" data-en=",">：</span></label>
+          <label class="message-line"><span class="sr-stationery" data-en="Your message, up to 96 characters">写给对方的话，最多 96 字</span><textarea id="gift-words" name="message" rows="3" maxlength="96" autocapitalize="sentences"></textarea></label>
           <span id="reply-count" aria-hidden="true">0 / 96</span>
-          <label class="reply-signature"><span data-en="With love,">落款</span><input id="gift-from" name="from" maxlength="18" placeholder="你的名字（选填）" data-en-placeholder="Your name (optional)" autocomplete="off"></label>
+          <label class="reply-signature"><span data-en="With love,">落款</span><input id="gift-from" name="from" maxlength="18" placeholder="你的名字（选填）" data-en-placeholder="Your name (optional)" aria-label="署名（选填）" data-en-label="Your signature (optional)" autocomplete="off" autocapitalize="words" enterkeyhint="done"></label>
         </div>
         <div class="reply-post">
           <button type="submit" id="seal-gift" class="gold-button"><i class="icon envelope"></i><span>封好并下载</span></button>
