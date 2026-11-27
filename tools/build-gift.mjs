@@ -63,6 +63,7 @@ for (const [tag] of index.matchAll(/<link\b[^>]*>/gi)) {
 shell = shell.replace(/<script\b[^>]*\btype\s*=\s*["']importmap["'][^>]*>[\s\S]*?<\/script>/gi, '')
   .replace(/<script\b[^>]*\bid\s*=\s*["']gift-message["'][^>]*>[\s\S]*?<\/script>/gi, '')
   .replace(/<script\b[^>]*\bsrc\s*=\s*["'](?:\.\/)?app\.js["'][^>]*>\s*<\/script>/i, '<!--GIFT_MESSAGE-->\n<!--GIFT_SHELL-->\n<!--GIFT_PROGRAM-->');
+shell = shell.replace(/^[ \t]+(?=\r?$|<!--GIFT_)/gm, '');
 for (const key of ['STYLE','PROGRAM','SHELL','MESSAGE']) {
   if (shell.split('<!--GIFT_' + key + '-->').length !== 2) throw Error('Unexpected template marker count for ' + key);
 }

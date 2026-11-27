@@ -118,6 +118,17 @@ export function createCanvasScene(canvas,recipient=''){
     const t=i/418,a=t*TAU*5.8+.18,b=canopy(t)*(.94+.055*Math.sin(a*2));
     append({kind:2,at:polar(b,a,.89+t*4.02-.048*Math.sin(a*3)),r:i%4===0?.019:.008,birth:t*.90+.06});
   }
+  for(const o of objects){
+    const radius=.06+Math.sqrt(o.seed)*2.42;
+    const wobble=Math.sin(o.phase*23.69+o.seed*56)*(.23+.1*o.seed);
+    const angle=Math.floor(o.phase/TAU*4)*TAU/4+radius*1.5+o.phase*.13+wobble;
+    o.orbitX=Math.cos(angle)*radius;o.orbitY=Math.sin(angle)*radius;
+    o.orbitLift=Math.sin(o.seed*120)*.105;
+    if(o.kind===0){
+      const reach=Math.hypot(o.to[0],o.to[2])/Math.max(.14,canopy(limit((o.at[1]-.94)/3.93)));
+      o.frostCoverage=ramp(reach,.44,1.03)*(.45+.41*o.seed);
+    }
+  }
   // Crystal seeds live on the same three-dimensional sprays as the eventual
   // needles, so the silver silhouette settles into the actual branches.
   const crystalPalette=['#86b2e4','#abcdf4','#d1e4fc','#f2f8ff'];
@@ -366,7 +377,7 @@ export function createCanvasScene(canvas,recipient=''){
     }
     ctx.restore();
   }
-  function redraw(ctx,w,h,state){
+  function redraw(ctx,w,h,state,dpr=1){
     const {time=0,phase='sealed',progress=0,growth=0,scatter=0,light=1,illumination=0,snow=0,frost=0,aimX=.5,aimY=.5,charge=0,orbit=0,parcelProgress=0}=state;
     const p=limit(parcelProgress),grow=limit(growth),cloud=limit(scatter),camera=ramp(p,.33,.87);
     const boxUnit=Math.min(w*.239,h*.254),treeUnit=Math.min(w*.255,h*.157);
@@ -675,32 +686,37 @@ export function createCanvasScene(canvas,recipient=''){
       ctx.restore();
       for(const o of objects)o.z=o.at[0]*sa+o.at[2]*ca;
       objects.sort((a,b)=>a.z-b.z);
+      const driftCos=Math.cos(time*.13),driftSin=Math.sin(time*.13),lift=Math.sin(cloud*Math.PI)*scale*.22;
+      let branchTransform=false;
       for(const o of objects){
         const born=ramp(grow,o.birth,Math.min(.999,o.birth+.13));if(!born)continue;
-        const pos=project(o.at);
-        let x=pos[0],y=pos[1];
+        const posX=center+(o.at[0]*ca-o.at[2]*sa)*scale,posY=baseline+(o.z*pitch-o.at[1])*scale;
+        let x=posX,y=posY;
         if(cloud>.0001){
-          const spread=Math.sin(o.phase*23.69+o.seed*56);
-          const rr=.06+Math.sqrt(o.seed)*2.42,ang=(Math.floor(o.phase/TAU*4))*TAU/4+rr*1.5+o.phase*.13+time*.13+spread*(.23+.1*o.seed);
-          const ox=Math.cos(ang)*rr,oy=Math.sin(ang)*rr;
+          const ox=o.orbitX*driftCos-o.orbitY*driftSin,oy=o.orbitX*driftSin+o.orbitY*driftCos;
           x=mix(x,center+scale*(ox+(aimX-.5)*.96),cloud);
-          y=mix(y,baseline-scale*(2.65+oy*.38+ox*.22+Math.sin(o.seed*120)*.105-(aimY-.5)*.86),cloud)-Math.sin(cloud*Math.PI)*scale*.22;
+          y=mix(y,baseline-scale*(2.65+oy*.38+ox*.22+o.orbitLift-(aimY-.5)*.86),cloud)-lift;
         }
+        if(branchTransform && o.kind!==0){ctx.setTransform(dpr,0,0,dpr,0,0);branchTransform=false;}
         if(o.kind===0){
           if(cloud<.95){
-            const end=project(o.to),dx=end[0]-pos[0],dy=end[1]-pos[1],l=Math.hypot(dx,dy)*born*(1-cloud);
+            const dx=center+(o.to[0]*ca-o.to[2]*sa)*scale-posX;
+            const dy=baseline+((o.to[0]*sa+o.to[2]*ca)*pitch-o.to[1])*scale-posY;
+            const length=Math.hypot(dx,dy),l=length*born*(1-cloud);
             const height=Math.max(1,scale*.12*(1-cloud)*born*.98+l*.39);
-            ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(dy,dx));ctx.drawImage(sprays[o.sprite],-l*.045,-height*.56,l*1.1,height);
+            const nx=length?dpr*dx/length:dpr,ny=length?dpr*dy/length:0;
+            ctx.setTransform(nx,ny,-ny,nx,x*dpr,y*dpr);branchTransform=true;
+            ctx.drawImage(sprays[o.sprite],-l*.045,-height*.56,l*1.1,height);
             if(frost>.008){
-              const reach=Math.hypot(o.to[0],o.to[2])/Math.max(.14,canopy(limit((o.at[1]-.94)/3.93)));
-              const dusting=ramp(frost,.13*o.seed,.80+.20*o.seed)*ramp(reach,.44,1.03)*(.45+.41*o.seed);
+              const dusting=ramp(frost,.13*o.seed,.80+.20*o.seed)*o.frostCoverage;
               if(dusting>.01){
                 ctx.globalAlpha=dusting;ctx.drawImage(icedSprays[o.sprite][dx<0?1:0],-l*.045,-height*.56,l*1.1,height);
+                ctx.globalAlpha=1;
               }
             }
-            ctx.restore();
           }
           if(cloud>.15){
+            if(branchTransform){ctx.setTransform(dpr,0,0,dpr,0,0);branchTransform=false;}
             ctx.globalAlpha=ramp(cloud,.15,.83)*(.46+.52*o.seed);
             ctx.fillStyle=o.seed>.88?'#ffdfb0':o.seed>.62?'#ffd0db':o.seed>.34?'#f396af':'#c77f9e';
             const radius=Math.max(.5,scale*.009*(.4+o.seed));ctx.fillRect(x,y,radius,radius);ctx.globalAlpha=1;
@@ -720,6 +736,7 @@ export function createCanvasScene(canvas,recipient=''){
             if(o.seed>.83&&shine>.88)glint(ctx,x,y,r*2.9)}
         }
       }
+      if(branchTransform)ctx.setTransform(dpr,0,0,dpr,0,0);
       if(grow>.88&&cloud<.98){
         const [x,y]=project([0,5.0,0]),r=.235*scale*ramp(grow,.88,1)*(1-cloud);
         const pts=Array.from({length:10},(_,i)=>[x+Math.sin(i*Math.PI/5)*r*(i%2?.45:1),y-Math.cos(i*Math.PI/5)*r*(i%2?.45:1)]);
@@ -779,19 +796,26 @@ export function createCanvasScene(canvas,recipient=''){
     drawWishes(ctx,w,h);
     ctx.globalAlpha=1;
   }
+  let sealedPose=null;
   function render(state){
     lastState=state;const now=state.time??0,dt=limit(state.dt??(now-lastTime),0,.12);lastTime=now;
     const w=Math.max(1,canvas.clientWidth),h=Math.max(1,canvas.clientHeight),dpr=Math.min(window.devicePixelRatio||1,1.65);
-    if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
+    const resized=canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr);
+    if(resized){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
+    // The canvas parcel and its stage depend only on the ribbon pose before unwrapping.
+    // The independently animated sky stays live in its own layer.
+    const pose=state.phase==='sealed' ? state.parcelProgress ?? 0 : null;
+    if(!resized && pose!==null && pose===sealedPose)return;
+    sealedPose=pose;
     screen.setTransform(dpr,0,0,dpr,0,0);
     if(state.snow>.002)advanceSnow(calm.matches?dt*.28:dt,state);
     for(let i=wishes.length-1;i>=0;i--){wishes[i].age+=dt;if(wishes[i].age>wishes[i].end)wishes.splice(i,1)}
-    redraw(screen,w,h,state);
+    redraw(screen,w,h,state,dpr);
   }
   function capture(){
     return bitmap(1280,960,(c,w,h)=>{
       redraw(c,w,h,lastState);
     });
   }
-  return {render,wish,capture,reset(){wishes.length=0;lastTime=0;snowWind=0}};
+  return {render,wish,capture,reset(){wishes.length=0;lastTime=0;snowWind=0;sealedPose=null}};
 }

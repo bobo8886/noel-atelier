@@ -1,6 +1,6 @@
 /* Deterministic spruce geometry. All positions, foliage, bark, glass and light
    reflections are built at runtime; the renderer does not load any tree art. */
-export function createFir(THREE) {
+export function* prepareFir(THREE) {
   const group = new THREE.Group();
   group.name = 'Winter spruce';
   const compact = globalThis.matchMedia?.('(max-width: 650px), (pointer: coarse)')?.matches === true;
@@ -194,6 +194,7 @@ export function createFir(THREE) {
         const pos=mainAt(range(.82,.99));
         twigTipOptions.push({pos,angle,l,seed:random()});
       }
+      yield;
     }
   }
   // A fresh upright leader and its small ascending shoots close the crown naturally.
@@ -203,6 +204,7 @@ export function createFir(THREE) {
       .105+(1-i/21)*.08,theta,.67+i*.001,.9,false);
   }
 
+  yield;
   const matteShader=shader(`
     attribute vec3 firColor, aOrigin;
     attribute float aBirth;
@@ -287,6 +289,7 @@ export function createFir(THREE) {
     void main(){gl_FragColor=vec4(vColor,1.);${output}
     }`,{side:THREE.DoubleSide,forceSinglePass:true});
   const foliage=new THREE.Mesh(leafGeo,leafMat);foliage.frustumCulled=false;group.add(foliage);
+  yield;
 
   function ornament(pos,radius,kind,seed) {
     const palette=['#a30c22','#c4963e','#dfc585','#714524','#ecdac2'];
@@ -363,6 +366,7 @@ export function createFir(THREE) {
   }
   const woodwork=meshFromParts(bark,matteShader);
   const bowsMesh=meshFromParts(ribbons,matteShader);
+  yield;
 
   const unitSphere=new THREE.SphereGeometry(1,21,14);
   const glassGeo=new THREE.InstancedBufferGeometry();
@@ -488,4 +492,11 @@ export function createFir(THREE) {
   }
   update();
   return {group,update,starY,height:5.215};
+}
+
+export function createFir(THREE) {
+  const steps=prepareFir(THREE);
+  let result;
+  do { result=steps.next(); } while(!result.done);
+  return result.value;
 }

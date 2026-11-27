@@ -1,0 +1,183 @@
+/* The photograph keeps its own mount. The adjacent folded sheet carries the letter. */
+#letter .keepsake {
+  isolation: isolate; width: min(982px, 100%); grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  gap: 0; padding: 3px 4px 7px; outline: 0; border: 0;
+  color: #303e33; background: none; box-shadow: none; transform: none;
+}
+#letter:not([hidden]) .keepsake { animation: none; }
+.folio-pocket {
+  position: relative; z-index: 0; min-width: 0; margin: 14px -22px 0 0;
+  padding: clamp(14px, 2vw, 26px) clamp(23px, 3.1vw, 42px) clamp(15px, 2vw, 24px) clamp(12px, 1.8vw, 23px);
+  border: 1px solid #968962; border-radius: 2px 0 0 3px;
+  transform: rotate(-3.5deg);
+  background: repeating-linear-gradient(103deg, #e6d5950c 0 .6px, transparent .7px 3px),
+    repeating-linear-gradient(9deg, #b0ba8f09 0 .7px, transparent .8px 3px),
+    linear-gradient(128deg, #3b5442, #203d32 48%, #132e28);
+  box-shadow: -1px 4px 7px #0a101b6b, 0 15px 36px #080b12a8;
+}
+.folio-pocket::before {
+  content: ""; pointer-events: none; position: absolute; inset: 6px;
+  border: 1px solid #bea47466; outline: 1px solid #bca77924; outline-offset: 2px;
+}
+#letter .card-print {
+  width: 100%; margin: 0; padding: 6px 6px 0; border: 1px solid #ccba99;
+  background: linear-gradient(127deg, #fcf8eb, #f2e9d4); transform: rotate(1deg);
+  box-shadow: 1px 3px 6px #0c2017a6;
+}
+#letter .card-print::before, #letter .card-print::after { width: 21px; height: 21px; }
+#letter #card-photo {
+  outline: 1px solid #45443d70; outline-offset: -1px; clip-path: inset(.4px round .65px);
+}
+#letter .card-print figcaption { padding: 7px 9px 8px; text-align: center; }
+#letter .card-print h2 {
+  margin: 0; color: #725547; letter-spacing: -.045em;
+  font: 500 italic clamp(22px, 2.8vw, 35px)/1 var(--serif);
+}
+#letter .card-writing {
+  --rule: 1.87em; position: relative; z-index: 1; width: 100%; min-height: 350px;
+  padding: clamp(24px, 2.8vw, 35px) clamp(26px, 3.5vw, 46px) clamp(29px, 3.2vw, 40px);
+  transform: rotate(.7deg); border: 1px solid #e4d6b9; color: #344438;
+  background: linear-gradient(180deg, transparent 53.2%, #ac987e0f 53.8%, #88725534 54%, #fffdf5c9 54.3%, transparent 55.9%),
+    repeating-linear-gradient(23deg, #a58d6608 0 .6px, transparent .8px 4px),
+    radial-gradient(ellipse at 65% 20%, #fffaf0a6, transparent 75%),
+    linear-gradient(105deg, #e9dfca, #f5eddc 7%, #f7efdf 76%, #eadecb 100%);
+  box-shadow: -4px 5px 11px #1820183d, 1px 2px 1px #ab9670, 2px 4px 0 #e0d3b8,
+    3px 5px 0 #a99572, 0 17px 41px #0a0c1699;
+}
+#letter .card-writing::before { display: none; }
+.folio-letterhead {
+  position: relative; min-height: 42px; margin: 0 0 7px;
+  border-bottom: 1px solid #8c7a4e9c;
+}
+.folio-letterhead::after {
+  content: ""; position: absolute; height: 1px; bottom: 2px; left: 0; right: 0;
+  background: linear-gradient(90deg, #a895626b, #a895621f);
+}
+.folio-stationer {
+  display: inline-flex; align-items: center; gap: 8px; margin: 0 56px 9px 0;
+  color: #405640; font: 600 clamp(20px, 2.35vw, 28px)/1 var(--serif); letter-spacing: -.045em;
+}
+#letter .folio-stationer .fir { width: 22px; height: 25px; color: #7a7047; }
+.folio-postmark {
+  position: absolute; z-index: 1; top: -9px; right: 1px; display: flex;
+  align-items: center; justify-content: center; flex-direction: column; gap: 2px; width: 48px; aspect-ratio: 1;
+  border: 1.5px solid #934e42a8; outline: 1px dotted #934e4282; outline-offset: -5px; border-radius: 50%;
+  color: #884c43; transform: rotate(11deg); background: #f6edda;
+}
+.folio-postmark span { font: 500 8px/.95 DM, Arial, sans-serif; letter-spacing: .12em; }
+.folio-postmark b { border-block: 1px solid #a06e5b94; padding: 1px 2px; font: 600 12px/1 var(--serif); }
+.folio-date {
+  display: block; text-align: right; color: #786852; font: 500 12px/1.4 var(--cn);
+  letter-spacing: .045em;
+}
+#letter #card-to {
+  margin: clamp(17px, 2.1vw, 27px) 0 6px; font: 600 clamp(19px, 2.1vw, 25px)/1.45 var(--cn);
+  color: #314c40; letter-spacing: .035em;
+}
+#letter #card-body {
+  margin: 0; min-height: calc(3 * var(--rule)); font: 500 clamp(15px, 1.6vw, 18px)/var(--rule) var(--cn);
+  color: #3b493e; white-space: pre-wrap; overflow-wrap: anywhere;
+  background: repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - 1px), #8e826c2b calc(var(--rule) - 1px) var(--rule));
+}
+#letter #card-from {
+  margin: 21px 0 0 auto; color: #67513d; padding: 0 1px 0 12px;
+  font: 500 italic clamp(23px, 2.4vw, 30px)/1.2 var(--serif), var(--cn);
+  transform: rotate(-2deg);
+}
+#letter #card-wish {
+  position: relative; margin: 17px 0 0; border: 0; border-top: 1px dotted #99866b82;
+  padding: 9px 0 0; font: 500 13px/1.65 var(--cn); color: #795b4c;
+}
+#letter .letter-actions { position: relative; z-index: 2; }
+.letter-download {
+  position: relative; display: inline-flex; align-items: stretch; border-radius: 24px;
+  background: linear-gradient(110deg, #f6e4be, #e2c58b); border: 1px solid #f4dfae;
+  box-shadow: inset 0 0 0 2px #f5e7c676;
+}
+#letter #keep {
+  background: none; border: 0; box-shadow: none; border-radius: 23px 0 0 23px; min-height: 40px;
+  padding-inline: 16px 10px;
+}
+#letter #keep:hover { transform: none; background: #fff8dc55; }
+#letter-formats { display: flex; align-items: stretch; color: #3f4939; }
+#letter-formats summary {
+  display: grid; place-items: center; height: 100%; min-height: 40px; width: 35px;
+  list-style: none; cursor: pointer; border-radius: 0 23px 23px 0;
+}
+#letter-formats summary::marker { content: ""; }
+#letter-formats summary::-webkit-details-marker { display: none; }
+#letter-formats summary::before {
+  content: ""; position: absolute; top: 10px; bottom: 10px; width: 1px; margin-left: -34px;
+  background: #7b6e4354;
+}
+#letter-formats summary > span {
+  display: block; width: 7px; height: 7px; margin-top: -4px; rotate: 45deg; border: solid currentColor; border-width: 0 1.5px 1.5px 0;
+}
+#letter-formats summary:hover, #letter-formats[open] summary { background: #fff6d84d; }
+#letter-formats summary:focus-visible { outline: 2px solid #fff0c8; outline-offset: 4px; }
+#letter #save-postcard {
+  position: absolute; z-index: 2; bottom: calc(100% + 7px); left: 0; width: max-content; max-width: 80vw;
+  background: #f4e9d3; border: 1px solid #bda675; border-radius: 5px; color: #354d40;
+  box-shadow: 0 5px 15px #12201d66; font: 500 13px/1.4 DM, var(--cn);
+}
+#letter #save-postcard:hover { background: #fff5de; }
+@media (prefers-reduced-motion: no-preference) {
+  #letter:not([hidden]) .folio-pocket { animation: place-tree-photo .86s cubic-bezier(.19,.77,.21,1) both; }
+  #letter:not([hidden]) .card-writing { animation: lay-stationery 1.06s cubic-bezier(.19,.77,.21,1) both; }
+  #letter:not([hidden]) .card-writing::after {
+    content: ""; pointer-events: none; position: absolute; z-index: 2; inset: 54% -1px -1px;
+    transform-origin: center top;
+    background: linear-gradient(170deg, #ded1b7, #f7edda 40%, #eee0c5);
+    border: 1px solid #cbba98; box-shadow: 0 2px 5px #6d5b4238;
+    animation: unfold-stationery .99s .08s cubic-bezier(.29,.04,.23,1) both;
+  }
+  @keyframes place-tree-photo { from { opacity: 0; transform: translate(15px, 13px) rotate(-1deg); } }
+  @keyframes lay-stationery { from { opacity: 0; transform: perspective(850px) translate(-9px, 17px) rotateY(-9deg) rotate(2deg); } }
+  @keyframes unfold-stationery {
+    0%, 17% { transform: perspective(650px) rotateX(165deg); opacity: .96; }
+    75% { transform: perspective(650px) rotateX(15deg); opacity: .76; }
+    100% { transform: perspective(650px) rotateX(0deg); opacity: 0; visibility: hidden; }
+  }
+}
+@media (max-width: 680px) {
+  #letter .keepsake { width: min(426px, 100%); grid-template-columns: minmax(0, 1fr); gap: 0; padding: 3px 2px 5px; }
+  .folio-pocket { width: 84%; margin: 0 auto -12px; padding: 10px 12px 15px; transform: rotate(-2.8deg); }
+  #letter .card-print { padding: 4px 4px 0; }
+  #letter .card-print::before, #letter .card-print::after { width: 14px; height: 14px; }
+  #letter .card-print figcaption { padding-block: 4px 5px; }
+  #letter .card-print h2 { font-size: 24px; }
+  #letter .card-writing { min-height: 0; padding: 23px clamp(19px, 6vw, 30px) 24px; transform: rotate(.35deg); }
+  .folio-letterhead { min-height: 33px; }
+  .folio-postmark { width: 37px; top: -8px; gap: 1px; }
+  .folio-postmark span { font-size: 7px; }
+  .folio-postmark b { font-size: 10px; }
+  .folio-stationer { margin-bottom: 7px; font-size: 22px; }
+  #letter .folio-stationer .fir { width: 16px; height: 20px; }
+  .folio-date { font-size: 11px; }
+  #letter #card-to { font-size: 18px; margin-top: 12px; }
+  #letter #card-body { font-size: 15px; --rule: 1.72em; }
+  #letter #card-from { font-size: 23px; margin-top: 13px; }
+  #letter #card-wish { font-size: 12px; margin-top: 11px; padding-top: 7px; }
+  #letter .letter-actions { column-gap: 6px; }
+}
+@media (max-width: 360px) {
+  #letter .letter-actions { max-width: 100%; }
+  #letter #keep { padding-inline: 11px 6px; }
+  #letter-formats summary { width: 29px; }
+  #letter-formats summary::before { margin-left: -28px; }
+  #letter #regift { padding-inline: 9px; }
+}
+@media (max-height: 520px) and (min-width: 681px) {
+  #letter .keepsake { width: min(840px, 98%); }
+  .folio-pocket { align-self: start; margin-top: 17px; }
+  #letter .card-writing { padding: 17px 22px 21px; min-height: 245px; }
+  #letter #card-to { margin-top: 9px; font-size: 18px; }
+  #letter #card-body { font-size: 14px; --rule: 1.67em; }
+  #letter #card-from { font-size: 22px; margin-top: 8px; }
+  #letter #card-wish { margin-top: 8px; padding-top: 5px; }
+  .folio-letterhead { min-height: 30px; }
+  .folio-stationer { font-size: 21px; margin-bottom: 5px; }
+  #letter .folio-stationer .fir { height: 18px; width: 16px; }
+  .folio-postmark { top: -7px; width: 36px; }
+  .folio-postmark b { font-size: 9px; }
+}

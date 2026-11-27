@@ -18,15 +18,15 @@
 
 ## 礼盒里有什么
 
-拉开蝴蝶结，盒盖升起，四面盒壁依次翻开。一棵松树在冬夜的湖畔长成，从树干、松针到金属挂球和绕枝灯串，都由代码绘制。你可以拖动视角绕树看一圈，也可以按住枝头攒一束光，让心愿飞过湖面。最后，今夜的树会留在一张可以带走的贺卡上。
+拉开蝴蝶结，盒盖升起，四面盒壁依次翻开。一棵松树在冬夜的湖畔长成，从树干、松针到金属挂球和绕枝灯串，都由代码绘制。你可以拖动视角绕树看一圈，也可以按住枝头攒一束光，让心愿飞过湖面。最后，今夜的树会成为一张随信附上的照片。
 
 <p align="center"><img src="./assets/brand/parcel-preview.webp" width="48%" alt="实机画面，深绿礼盒系着红色蝴蝶结"> <img src="./assets/brand/tree-preview.webp" width="48%" alt="实机画面，点亮的圣诞树和湖面中的倒影"></p>
 
 ## 送给一个人
 
 1. 进入礼物，点右上角的信封，填收礼人的名字，写下署名和祝福。点「封好并下载」会得到一份专属 HTML 文件。
-2. 把文件作为附件发给对方。收礼人保存后用浏览器打开，离线也能从未拆封的礼盒开始。开场会叫出对方的名字，结尾贺卡上会出现你写的话。
-3. 点「保存贺卡」可下载 PNG，点「写一份回礼」可以重新封装一份礼物。收礼人在互动时写下的心愿，也会留在自己的贺卡上。
+2. 把文件作为附件发给对方。收礼人保存后用浏览器打开，离线也能从未拆封的礼盒开始。开场会叫出对方的名字，信纸上会出现你写的话。
+3. 点「保存来信」可将树景和信纸一起存为横版 PNG，旁边的小箭头可以选择原有的竖版明信片。点「写一份回礼」可写信、封缄并下载。互动时写下的心愿会留在收礼人自己的信里。
 
 ## 四种互动
 
@@ -44,9 +44,9 @@
 | 版本 | 打开方式 |
 | --- | --- |
 | 在线体验 | 打开[中文页面](https://bobo8886.github.io/noel-atelier/?lang=zh)或[英文页面](https://bobo8886.github.io/noel-atelier/?lang=en)。鼠标、触屏、键盘可直接玩，也可自选开启摄像头。 |
-| 单文件礼物 | 保存[离线 HTML](https://github.com/bobo8886/noel-atelier/releases/latest/download/noel-atelier-offline.html)，双击打开。动画、声音、双语界面、贺卡和回礼都装在这一个文件里。 |
+| 单文件礼物 | 保存[离线 HTML](https://github.com/bobo8886/noel-atelier/releases/latest/download/noel-atelier-offline.html)，双击打开。动画、声音、双语界面、信纸、明信片和回礼都装在这一个文件里。 |
 | 完整版 | 下载并解压[完整 ZIP](https://github.com/bobo8886/noel-atelier/releases/latest/download/noel-atelier.zip)，里面有双击可玩的 HTML，以及带本地手势识别模型的源码。 |
-| GitHub Packages | 同一份 ZIP 也以 Maven 构件 `io.github.bobo8886:noel-atelier:1.0.0` 发布。免登录下载可用 Releases。 [软件包目录](https://github.com/users/bobo8886/packages?repo_name=noel-atelier) · [发行页](https://github.com/bobo8886/noel-atelier/releases/latest) |
+| GitHub Packages | 同一份 ZIP 也以 Maven 构件 `io.github.bobo8886:noel-atelier:1.1.0` 发布。免登录下载可用 Releases。 [软件包目录](https://github.com/users/bobo8886/packages?repo_name=noel-atelier) · [发行页](https://github.com/bobo8886/noel-atelier/releases/latest) |
 
 本地运行源码版时，先安装 Node.js。在含有 `server.mjs` 的目录运行以下命令。Windows 也可以双击 `启动圣诞工坊.cmd`。
 

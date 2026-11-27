@@ -1,8 +1,8 @@
 **[Open the gift in English](https://bobo8886.github.io/noel-atelier/?lang=en) · [用中文拆礼物](https://bobo8886.github.io/noel-atelier/?lang=zh)**
 
-Pull the ribbon, bring the fir to life and save a postcard with your wish. Choose English or 简体中文 at the top of the scene.
+A mounted photograph of your tree now accompanies a folded Christmas letter. Save the spread or the original portrait postcard, then write and seal a personal reply. Both languages and the offline edition are included.
 
-拉开缎带，让云杉从星光中生长。写下心愿，保存贺卡，也可以制作一份署名回礼。
+左边装裱当晚的圣诞树，右边展开一封带邮戳与落款的来信。可保存横版来信或竖版明信片，再亲手写回信、封好并下载。两种语言和离线版同步更新。
 
 | Download | What’s inside |
 | --- | --- |

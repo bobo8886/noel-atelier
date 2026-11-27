@@ -49,9 +49,13 @@ export function createParcel(THREE, recipient='') {
       wash.addColorStop(1, lining ? '#dfcba7' : '#174735');
       ctx.fillStyle = wash; ctx.fillRect(0, 0, w, h);
       const fiber = ctx.getImageData(0, 0, w, h);
-      for (let i = 0; i < fiber.data.length; i += 4) {
-        const fleck = (rand() - .48) * 12 + Math.sin(Math.floor(i/(4*w))*1.61)*1.8;
-        for (let c = 0; c < 3; c++) fiber.data[i + c] += fleck;
+      const pixels = fiber.data;
+      for (let y = 0, i = 0; y < h; y++) {
+        const weave = Math.sin(y * 1.61) * 1.8;
+        for (let x = 0; x < w; x++, i += 4) {
+          const fleck = (rand() - .48) * 12 + weave;
+          pixels[i] += fleck; pixels[i+1] += fleck; pixels[i+2] += fleck;
+        }
       }
       ctx.putImageData(fiber, 0, 0);
       ctx.strokeStyle = lining ? '#948056' : '#dfc88d'; ctx.fillStyle = ctx.strokeStyle;
@@ -208,9 +212,10 @@ export function createParcel(THREE, recipient='') {
     const surface=map.image;
     const coating=texture(surface.width,surface.height,ctx=>{
       ctx.drawImage(surface,0,0);const data=ctx.getImageData(0,0,surface.width,surface.height);
-      for(let i=0;i<data.data.length;i+=4){
-        const foil=smooth(data.data[i]-data.data[i+1]*.81,-8,48);
-        data.data[i]=255;data.data[i+1]=225-foil*116;data.data[i+2]=5+foil*134;
+      const pixels=data.data;
+      for(let i=0;i<pixels.length;i+=4){
+        const foil=smooth(pixels[i]-pixels[i+1]*.81,-8,48);
+        pixels[i]=255;pixels[i+1]=225-foil*116;pixels[i+2]=5+foil*134;
       }
       ctx.putImageData(data,0,0);
     });

@@ -18,7 +18,7 @@
 
 ## Inside the parcel
 
-The bow comes undone, the box folds open, and a fir grows above a frozen lake. Code draws its trunk, needles, ornaments and lights. Drag to walk your view around the tree, or hold your finger over a branch and let a wish take flight. The closing scene leaves you with a postcard of your tree.
+The bow comes undone, the box folds open, and a fir grows above a frozen lake. Code draws its trunk, needles, ornaments and lights. Drag to walk your view around the tree, or hold your finger over a branch and let a wish take flight. At the end, a photograph of your tree accompanies a folded Christmas letter.
 
 <p align="center"><img src="./assets/brand/parcel-preview.webp" width="48%" alt="An unopened pine-green parcel tied with red ribbon"> <img src="./assets/brand/tree-preview.webp" width="48%" alt="The illuminated fir reflecting in the lake, captured from the running scene"></p>
 
@@ -26,7 +26,7 @@ The bow comes undone, the box folds open, and a fir grows above a frozen lake. C
 
 1. Open the gift and choose the envelope in the top toolbar. Enter a name, an optional signature, and a message. Seal the gift to download a personalized HTML file.
 2. Send that file as an attachment. Your recipient can save it and open it in a browser, even offline. The parcel starts sealed, the greeting bears their name, and your message appears on the final card.
-3. Choose **Save postcard** to keep a PNG, or **Send a gift back** to seal a new parcel. A wish written during the visit also appears on the postcard.
+3. Choose **Save letter** to keep the photograph and letter together as a landscape PNG. The arrow beside it offers the original portrait postcard. Choose **Send a gift back** to write and seal a reply. A wish written during the visit stays in the recipient’s own letter.
 
 ## Four ways to play
 
@@ -44,9 +44,9 @@ Use **Tab** and **Enter** to operate the controls. With the tree focused, the le
 | Edition | How to open it |
 | --- | --- |
 | Live website | Open the [English edition](https://bobo8886.github.io/noel-atelier/?lang=en) or [中文页面](https://bobo8886.github.io/noel-atelier/?lang=zh). Mouse, touch and keyboard work immediately. Camera gestures are optional. |
-| Single HTML | Save the [offline gift](https://github.com/bobo8886/noel-atelier/releases/latest/download/noel-atelier-offline.html), then double-click it. It includes both languages, the animations, audio, postcard exporter and return-gift maker. |
+| Single HTML | Save the [offline gift](https://github.com/bobo8886/noel-atelier/releases/latest/download/noel-atelier-offline.html), then double-click it. It includes both languages, the animations, audio, printable letter, portrait postcard and return-gift maker. |
 | Complete edition | Extract the [release ZIP](https://github.com/bobo8886/noel-atelier/releases/latest/download/noel-atelier.zip). It includes the portable HTML and the source edition with its local camera model. |
-| GitHub Packages | The same ZIP is published as the Maven artifact `io.github.bobo8886:noel-atelier:1.0.0`. For a download without signing in, use Releases. [Package registry](https://github.com/users/bobo8886/packages?repo_name=noel-atelier) · [Releases](https://github.com/bobo8886/noel-atelier/releases/latest) |
+| GitHub Packages | The same ZIP is published as the Maven artifact `io.github.bobo8886:noel-atelier:1.1.0`. For a download without signing in, use Releases. [Package registry](https://github.com/users/bobo8886/packages?repo_name=noel-atelier) · [Releases](https://github.com/bobo8886/noel-atelier/releases/latest) |
 
 To run the source edition, open the directory containing `server.mjs` and run the following command with Node.js installed. On Windows, you can also double-click `启动圣诞工坊.cmd`.
 

@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="assets/wish-note.css">
   <link rel="stylesheet" href="assets/letter.css">
   <link rel="stylesheet" href="assets/interface.css">
+  <link rel="stylesheet" href="assets/reply-stationery.css">
+  <link rel="stylesheet" href="assets/letter-folio.css">
   <script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script>
   <script type="module" src="app.js"></script>
 </head>
@@ -60,18 +62,36 @@
       <p><b data-camera-copy data-en="Galaxy">星河</b> <span data-camera-copy data-en="Open your palm and move it to guide the stars.">张开手掌，移动手心牵引星流。</span></p><p><b data-camera-copy data-en="Lights">亮灯</b> <span data-camera-copy data-en="Make a fist to light the tree from the bottom up.">轻握成拳，让灯火沿松枝攀升。</span></p><p><b data-camera-copy data-en="Snow">飘雪</b> <span data-camera-copy data-en="Make a V sign, then move left or right to steer the snow.">比出 V 字，左右移动改变风向。</span></p><p><b data-camera-copy data-en="Wish">许愿</b> <span data-camera-copy data-en="Pinch to gather light, then let go to send your wish.">两指捏合蓄光，松手送出愿望。</span></p>
       <small data-camera-copy data-en="You can also tap an effect, drag to turn the tree, or hold to make a wish.">鼠标或触屏可直接选择效果，拖动旋转，长按许愿。</small>
     </div>
-    <section id="letter" hidden data-en-label="Your Christmas card" aria-label="圣诞祝福">
+    <section id="letter" hidden data-en-label="Your Christmas letter and photograph" aria-label="你的圣诞来信与照片">
       <div class="keepsake">
-        <figure class="card-print"><canvas id="card-photo" width="1400" height="1050" role="img" data-en-label="The Christmas tree and night sky as you opened your card" aria-label="收下祝福时的圣诞树与夜空"></canvas></figure>
+        <div class="folio-pocket">
+          <figure class="card-print">
+            <canvas id="card-photo" width="1400" height="1050" role="img" data-en-label="The Christmas tree and night sky as you opened your letter" aria-label="收下祝福时的圣诞树与夜空"></canvas>
+            <figcaption><h2 lang="en">Merry Christmas</h2></figcaption>
+          </figure>
+        </div>
         <div class="card-writing">
-          <i class="icon fir" aria-hidden="true"></i><h2 lang="en">Merry Christmas</h2>
+          <div class="folio-letterhead">
+            <span class="folio-stationer" lang="fr"><i class="icon fir" aria-hidden="true"></i>Noël Atelier</span>
+            <div class="folio-postmark" aria-hidden="true"><span lang="fr">NOËL</span><b>25 XII</b></div>
+          </div>
+          <time class="folio-date" datetime="12-25" data-en="25 December">十二月二十五日</time>
           <strong id="card-to">圣诞快乐</strong>
           <p id="card-body"></p>
-          <blockquote id="card-wish" hidden><i class="icon wish"></i><span></span></blockquote>
           <em id="card-from">With love, Noël</em>
+          <blockquote id="card-wish" hidden><i class="icon wish" aria-hidden="true"></i><span></span></blockquote>
         </div>
       </div>
-      <div class="letter-actions"><button id="keep" class="gold-button"><i class="icon download"></i><span>保存贺卡</span></button><button id="regift" class="outlined-button" aria-haspopup="dialog"><i class="icon envelope"></i><span data-en="Send a gift back">写一份回礼</span></button></div>
+      <div class="letter-actions">
+        <div class="letter-download">
+          <button id="keep" class="gold-button"><i class="icon download"></i><span>保存贺卡</span></button>
+          <details id="letter-formats">
+            <summary aria-label="更多保存格式" data-en-label="More download formats" title="更多保存格式" data-en-title="More download formats"><span aria-hidden="true"></span></summary>
+            <button type="button" id="save-postcard" data-en="Save portrait postcard">保存竖版明信片</button>
+          </details>
+        </div>
+        <button id="regift" class="outlined-button" aria-haspopup="dialog"><i class="icon envelope"></i><span data-en="Send a gift back">写一份回礼</span></button>
+      </div>
       <button id="replay" data-en="Unwrap again" class="text-button">再拆一次</button>
     </section>
     <video id="webcam" data-en-label="Local camera preview" hidden muted playsinline aria-label="本地摄像头预览"></video>
@@ -80,24 +100,33 @@
   </main>
   <dialog id="gift-desk" aria-labelledby="desk-title">
     <form id="gift-form">
-      <button type="button" class="language-switch dialog-language" data-language-switch aria-label="切换到英语">EN</button>
-      <button type="button" id="desk-close" data-en-label="Close the gift desk" aria-label="关闭礼物签"><i class="icon cross"></i></button>
+      <div class="reply-tools">
+        <button type="button" class="language-switch dialog-language" data-language-switch aria-label="切换到英语">EN</button>
+        <button type="button" id="desk-close" data-en-label="Close the writing desk" aria-label="关闭写信台"><i class="icon cross"></i></button>
+      </div>
       <div class="envelope-pane" aria-hidden="true">
         <div class="envelope-model">
           <div class="envelope-back"></div><div class="envelope-flap"></div>
-          <div class="note-slip"><i class="icon fir"></i><em lang="fr" data-en="For you." data-en-lang="en">Pour toi.</em><span id="slip-name">给你</span></div>
+          <div class="note-slip">
+            <i class="icon fir"></i><span id="slip-name">给你</span>
+            <p id="slip-words"></p><i class="reply-ink-rule"></i><span id="slip-from"></span>
+          </div>
           <div class="envelope-front"></div><i class="wax-mark"><i class="icon fir"></i></i>
         </div>
+        <i class="reply-pen"><i></i></i>
       </div>
       <div class="desk-writing">
-        <h2 id="desk-title" data-en="Write a Christmas gift">写一份圣诞礼物</h2>
-        <div class="name-lines">
-          <label><span data-en="To">送给</span><input id="gift-to" name="to" maxlength="18" required placeholder="收礼人的名字" data-en-placeholder="Recipient’s name" autocomplete="off"></label>
-          <label><span data-en="From">署名</span> <small data-en="optional">选填</small><input id="gift-from" name="from" maxlength="18" placeholder="你的名字" data-en-placeholder="Your name" autocomplete="off"></label>
+        <h2 id="desk-title" tabindex="-1">写一封圣诞信</h2>
+        <div class="reply-paper">
+          <label class="reply-address"><span data-en="Dear">亲爱的</span><input id="gift-to" name="to" maxlength="18" required placeholder="收礼人的名字" data-en-placeholder="Recipient’s name" autocomplete="off"><span class="address-comma" aria-hidden="true" data-en=",">：</span></label>
+          <label class="message-line"><span class="sr-stationery" data-en="Your message, up to 96 characters">写给对方的话，最多 96 字</span><textarea id="gift-words" name="message" rows="3" maxlength="96"></textarea></label>
+          <span id="reply-count" aria-hidden="true">0 / 96</span>
+          <label class="reply-signature"><span data-en="With love,">落款</span><input id="gift-from" name="from" maxlength="18" placeholder="你的名字（选填）" data-en-placeholder="Your name (optional)" autocomplete="off"></label>
         </div>
-        <label class="message-line"><span data-en="Your message">写给对方的话</span><textarea id="gift-words" name="message" rows="3" maxlength="96"></textarea></label>
-        <button type="submit" id="seal-gift" class="gold-button"><i class="icon envelope"></i><span>封好并下载</span></button>
-        <p id="desk-status" role="status" aria-live="polite">会生成一份 HTML 文件，对方打开就能拆礼物。</p>
+        <div class="reply-post">
+          <button type="submit" id="seal-gift" class="gold-button"><i class="icon envelope"></i><span>封好并下载</span></button>
+          <p id="desk-status" role="status" aria-live="polite">封好后，会下载一份可转赠的 HTML 礼物。</p>
+        </div>
       </div>
     </form>
   </dialog>

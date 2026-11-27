@@ -1,10 +1,15 @@
 import {downloadGift} from './gift-export.js';
 import {getLanguage, t} from './i18n.js';
+import {renderLetterPrint} from './letter-print.js';
 
-const blessing = () => t('愿今夜落在你掌心的星光，也照亮你往后的每一个冬天。', 'May the starlight in your hands shine through every winter to come.');
+const blessing = () => t(
+  '点亮树顶那颗星的时候，我想到了你。\n愿你回家时有暖灯，抬头时有星光。',
+  'I thought of you as I lit the star at the top of the tree.\nMay there always be a light on for you at home.'
+);
+const letterBody = gift => gift.message || blessing();
 const defaultSignature = 'With love, Noël';
 const field = id => document.getElementById(id);
-const greeting = name => name ? t('亲爱的' + name, 'Dear ' + name + ',') : t('圣诞快乐', 'For you, this Christmas');
+const greeting = name => name ? t('亲爱的' + name + '：', 'Dear ' + name + ',') : t('亲爱的你：', 'Dear friend,');
 const signature = name => name ? t('来自 ' + name, 'With love, ' + name) : defaultSignature;
 const wishLine = wish => t('今晚的心愿 · ', 'Tonight’s wish · ') + wish;
 
@@ -24,25 +29,36 @@ function bindDesk(gift) {
   const dialog = field('gift-desk'), form = field('gift-form');
   const to = field('gift-to'), from = field('gift-from'), words = field('gift-words');
   const seal = field('seal-gift'), status = field('desk-status');
-  let busy = false, phase = 'ready', invalid = false;
+  let busy = false, phase = 'ready', invalid = false, replying = false;
   to.value = gift.from;
   from.value = gift.to;
   function localize() {
     words.placeholder = blessing();
-    field('slip-name').textContent = to.value.trim() || t('给你', 'For you');
+    field('desk-title').textContent = replying ? t('写一封回信', 'A letter in return') : t('写一封圣诞信', 'A Christmas letter');
+    field('slip-name').textContent = to.value.trim() ? greeting(to.value.trim()) : t('给你', 'For you,');
+    field('slip-words').textContent = words.value.trim() || blessing();
+    field('slip-from').textContent = signature(from.value.trim());
+    const count = field('reply-count');
+    count.textContent = words.value.length + ' / ' + words.maxLength;
+    count.dataset.full = String(words.value.length >= words.maxLength);
+    form.dataset.phase = phase;
+    seal.setAttribute('aria-busy', String(busy));
     to.setCustomValidity(invalid ? t('请写上收礼人的名字。', 'Enter the name of the person receiving this gift.') : '');
     const labels = {
       ready: t('封好并下载', 'Seal & download'),
-      packing: t('正在装入礼物…', 'Wrapping your gift…'),
+      packing: t('正在封信…', 'Sealing your letter…'),
       done: t('再次下载', 'Download again'),
       failed: t('重新封装', 'Try again')
     };
     seal.lastElementChild.textContent = labels[phase];
-    status.textContent = phase === 'done'
-      ? t('礼物已封好。把下载的 HTML 文件发给' + to.value.trim() + '，用浏览器打开即可。',
-          'Your gift is ready. Send the downloaded HTML file to ' + to.value.trim() + ' to open in a browser.')
-      : phase === 'failed' ? t('下载未完成，请重试。', 'The download didn’t finish. Please try again.')
-      : t('会生成一份 HTML 文件，对方打开就能拆礼物。', 'This makes an HTML file they can open to unwrap their gift.');
+    const feedback = {
+      ready: t('封好后，会下载一份可转赠的 HTML 礼物。', 'Sealing downloads an HTML gift you can send.'),
+      packing: t('正在把这封信装进圣诞礼物。', 'Tucking your letter into the gift.'),
+      done: t('已封好。把下载的 HTML 文件发给' + to.value.trim() + ' 即可。',
+        'Sealed. Send the downloaded HTML file to ' + to.value.trim() + '.'),
+      failed: t('下载未完成，信还在这里。请再试一次。', 'Your letter is still here. Please try the download again.')
+    };
+    if (status.textContent !== feedback[phase]) status.textContent = feedback[phase];
   }
   function update() {
     invalid = false;
@@ -54,10 +70,14 @@ function bindDesk(gift) {
   window.addEventListener('gift-languagechange', localize);
   form.addEventListener('input', update);
   to.addEventListener('invalid', () => { invalid = true; localize(); });
-  function open() {
+  function open(event) {
     if (dialog.open) return;
+    replying = event.currentTarget.id === 'regift';
+    localize();
     dialog.showModal();
-    to.focus({preventScroll: true});
+    dialog.scrollTop = 0;
+    const first = matchMedia('(pointer: coarse)').matches ? field('desk-title') : to;
+    first.focus({preventScroll: true});
   }
   field('write-gift').addEventListener('click', open);
   field('regift').addEventListener('click', open);
@@ -79,15 +99,18 @@ function bindDesk(gift) {
     const note = {to: to.value.trim(), from: from.value.trim(), message: words.value.trim(), lang: getLanguage()};
     busy = true;
     seal.disabled = true;
-    phase = 'packing'; localize();
+    phase = 'packing';
+    form.dataset.sealed = 'true';
+    localize();
     try {
       await downloadGift(note);
       if (note.to === to.value.trim() && note.from === from.value.trim() && note.message === words.value.trim()) {
         form.dataset.sealed = 'true';
         phase = 'done';
-      } else phase = 'ready';
+      } else { phase = 'ready'; form.dataset.sealed = 'false'; }
     } catch {
       phase = 'failed';
+      form.dataset.sealed = 'false';
     } finally { busy = false; seal.disabled = false; localize(); }
   });
 }
@@ -126,7 +149,7 @@ async function savePostcard(photo, gift, wish) {
   const serif = '"Songti SC", SimSun, Georgia, serif';
   const bodyFont = '33px ' + serif, wishFont = '28px ' + serif;
   ctx.font = bodyFont;
-  const body = linesOf(ctx, gift.message || blessing(), 1280);
+  const body = linesOf(ctx, letterBody(gift), 1280);
   ctx.font = wishFont;
   const memory = wish ? linesOf(ctx, wishLine(wish), 1260) : [];
   const fileName = 'Pour toi - ' + (gift.to || t('给你的圣诞礼物', 'Your Christmas gift')).replace(/[<>:"/\\|?*\x00-\x1f]/g, ' ') + '.png';
@@ -154,11 +177,28 @@ async function savePostcard(photo, gift, wish) {
   }
   ctx.fillStyle = '#556456'; ctx.font = gift.from ? '30px ' + serif : 'italic 500 39px Cormorant, Georgia, serif';
   ctx.fillText(signature(gift.from), 750, baseline + 62, 1280);
+  await downloadPrint(paper, fileName);
+}
+
+async function downloadPrint(paper, fileName) {
   const blob = await new Promise((resolve, reject) => paper.toBlob(b => b ? resolve(b) : reject(new Error('PNG')), 'image/png'));
   const url = URL.createObjectURL(blob), link = document.createElement('a');
   link.href = url; link.download = fileName;
   document.body.append(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+async function saveLetter(photo, gift, wish) {
+  const paper = document.createElement('canvas');
+  paper.width = 1980;
+  const wording = {salutation: greeting(gift.to), body: letterBody(gift),
+    memory: wish ? wishLine(wish) : '', signature: signature(gift.from),
+    heading: t('十二月二十五日', '25 December')};
+  const name = (gift.to || t('给你', 'For you')).replace(/[<>:"/\\|?*\x00-\x1f]/g, ' ');
+  const fileName = t('圣诞来信', 'A Christmas letter') + ' - ' + name + '.png';
+  await document.fonts.ready;
+  renderLetterPrint(paper.getContext('2d'), photo, wording, linesOf);
+  await downloadPrint(paper, fileName);
 }
 
 export function createLetter() {
@@ -172,13 +212,13 @@ export function createLetter() {
       : t('一份圣诞礼物，只为你。', 'A Christmas gift, just for you.');
     document.title = gift.to ? t('送给' + gift.to, 'For ' + gift.to) + ' · Pour toi' : t('Pour toi · 一份圣诞礼物', 'Pour toi · A Christmas gift');
     field('card-to').textContent = greeting(gift.to);
-    field('card-body').textContent = gift.message || blessing();
+    field('card-body').textContent = letterBody(gift);
     field('card-from').textContent = signature(gift.from);
     block.hidden = !wish;
     block.querySelector('span').textContent = wish ? wishLine(wish) : '';
     const labels = {
-      ready: t('保存贺卡', 'Save postcard'), saving: t('正在装裱…', 'Preparing postcard…'),
-      saved: t('再次保存贺卡', 'Save again'), failed: t('保存失败 · 重试', 'Try saving again')
+      ready: t('保存来信', 'Save letter'), saving: t('正在装裱…', 'Preparing print…'),
+      saved: t('再次保存来信', 'Save letter again'), failed: t('保存失败 · 重试', 'Try saving again')
     };
     label.textContent = labels[saveState];
   }
@@ -192,15 +232,34 @@ export function createLetter() {
     localize();
     field('letter').scrollTop = 0;
   }
-  keep.addEventListener('click', async () => {
+  const formats = field('letter-formats'), portrait = field('save-postcard');
+  async function save(format) {
     if (keep.disabled) return;
+    const captured = document.createElement('canvas');
+    captured.width = photo.width; captured.height = photo.height;
+    captured.getContext('2d').drawImage(photo, 0, 0);
+    if (formats) formats.open = false;
     keep.disabled = true; saveState = 'saving'; localize();
-    try { await savePostcard(photo, gift, wish); saveState = 'saved'; }
+    try { await format(captured, gift, wish); saveState = 'saved'; }
     catch { saveState = 'failed'; }
     finally { keep.disabled = false; localize(); }
+  }
+  keep.addEventListener('click', () => save(saveLetter));
+  portrait?.addEventListener('click', () => {
+    keep.focus({preventScroll: true});
+    save(savePostcard);
+  });
+  formats?.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && formats.open) {
+      formats.open = false; formats.querySelector('summary').focus({preventScroll: true});
+    }
+  });
+  document.addEventListener('click', e => {
+    if (formats?.open && !formats.contains(e.target)) formats.open = false;
   });
   function reset() {
     wish = '';
+    if (formats) formats.open = false;
     saveState = 'ready';
     localize();
     ink.clearRect(0, 0, photo.width, photo.height);

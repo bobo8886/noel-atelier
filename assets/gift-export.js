@@ -2,22 +2,29 @@ import {getLanguage, t} from './i18n.js';
 
 // The offline edition carries a pristine document shell, its stylesheet and its
 // module bundle. Nothing is copied from the live scene, forms or incoming note.
-let hostedTemplate;
+let cachedParts;
+const languageSlot='<!--GIFT_LANG-->', messageSlot='<!--GIFT_MESSAGE-->';
 
-async function getTemplate() {
-  if (document.getElementById('gift-shell')) return document;
-  if (!hostedTemplate) {
-    hostedTemplate = (async () => {
-      const url = new URL('./gift-template.html', import.meta.url);
-      const response = await fetch(url, {mode: 'same-origin', referrerPolicy: 'no-referrer'});
-      if (!response.ok) throw new Error(t('未能读取礼物模板', 'The gift template could not be loaded.'));
-      return new DOMParser().parseFromString(await response.text(), 'text/html');
-    })().catch(error => {
-      hostedTemplate = undefined;
-      throw error;
-    });
+async function prepareParts() {
+  let template=document;
+  if(!template.getElementById('gift-shell')){
+    const response=await fetch(new URL('./gift-template.html',import.meta.url),{mode:'same-origin',referrerPolicy:'no-referrer'});
+    if(!response.ok)throw new Error(t('未能读取礼物模板','The gift template could not be loaded.'));
+    template=new DOMParser().parseFromString(await response.text(),'text/html');
   }
-  return hostedTemplate;
+  const tags={};
+  for(const id of ['style','program','shell']){
+    const node=template.getElementById('gift-'+id);
+    if(!node)throw new Error(t('礼物模板不完整','The gift template is incomplete.'));
+    tags['<!--GIFT_'+id.toUpperCase()+'-->']=new Blob([node.outerHTML]);
+  }
+  const decoded=atob(template.getElementById('gift-shell').textContent);
+  const bytes=new Uint8Array(decoded.length);
+  for(let i=0;i<decoded.length;i++)bytes[i]=decoded.charCodeAt(i);
+  const shell=new TextDecoder().decode(bytes).replace(/(<html\s+lang=")[^"]*/i,(_,prefix)=>prefix+languageSlot);
+  // Blob parts can share the immutable program, styles and shell on every reply.
+  return shell.split(/(<!--GIFT_(?:LANG|STYLE|PROGRAM|SHELL|MESSAGE)-->)/g).filter(Boolean).map(part=>
+    part===languageSlot||part===messageSlot?part:tags[part]||new Blob([part]));
 }
 
 function printableJSON(value) {
@@ -27,23 +34,12 @@ function printableJSON(value) {
 }
 
 export async function downloadGift({to = '', from = '', message = '', lang = getLanguage()} = {}) {
-  const template = await getTemplate();
-  const shell = template.getElementById('gift-shell');
-  const style = template.getElementById('gift-style');
-  const program = template.getElementById('gift-program');
-  if (!shell || !style || !program) throw new Error(t('礼物模板不完整', 'The gift template is incomplete.'));
-
-  const original = new TextDecoder().decode(Uint8Array.from(atob(shell.textContent), c => c.charCodeAt(0)));
+  cachedParts??=prepareParts().catch(error=>{cachedParts=undefined;throw error;});
+  const parts=await cachedParts;
   const note = {to: String(to), from: String(from), message: String(message), lang: lang === 'zh' ? 'zh' : 'en'};
-  const parts = {
-    STYLE: style.outerHTML,
-    PROGRAM: program.outerHTML,
-    SHELL: shell.outerHTML,
-    MESSAGE: '<script id="gift-message" type="application/json">' + printableJSON(note) + '</script>'
-  };
-  const html = original.replace(/<html\s+lang="[^"]*"/i, '<html lang="' + (note.lang === 'zh' ? 'zh-CN' : 'en') + '"')
-    .replace(/<!--GIFT_(STYLE|PROGRAM|SHELL|MESSAGE)-->/g, (_, key) => parts[key]);
-  const file = new Blob([html], {type: 'text/html;charset=utf-8'});
+  const messageTag='<script id="gift-message" type="application/json">'+printableJSON(note)+'</script>';
+  const file = new Blob(parts.map(part=>part===languageSlot?(note.lang==='zh'?'zh-CN':'en'):part===messageSlot?messageTag:part),
+    {type: 'text/html;charset=utf-8'});
   const url = URL.createObjectURL(file);
   const recipient = Array.from(note.to.trim()).slice(0, 40).join('').replace(/[<>:"/\\|?*\x00-\x1f]/g, ' ').trim();
   const link = document.createElement('a');

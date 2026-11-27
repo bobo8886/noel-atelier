@@ -60,7 +60,7 @@ function displayStand(T) {
 }
 
 async function webglScene(canvas, recipient) {
-  const [T,{createFir},{createParcel},{createMagic},{createLake}]=await Promise.all([
+  const [T,{prepareFir},{createParcel},{createMagic},{createLake}]=await Promise.all([
     import('three'),import('./assets/fir.js'),import('./assets/parcel.js'),import('./assets/magic.js'),import('./assets/lake.js')
   ]);
   const r=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
@@ -72,8 +72,19 @@ async function webglScene(canvas, recipient) {
   for(const [color,intensity,x,y,z] of [[0xffe6c5,2.18,-4,7,5],[0xc8e9ff,1.85,3,5,-4],[0xffc98e,.62,4,2,4]]){
     const l=new T.DirectionalLight(color,intensity);l.position.set(x,y,z);stage.add(l);
   }
-  const stand=displayStand(T),parcel=createParcel(T,recipient),fir=createFir(T),magic=createMagic(T),lake=createLake(T);
-  stage.add(stand,parcel.group,fir.group,magic.group,lake.group);
+  const stand=displayStand(T),parcel=createParcel(T,recipient),magic=createMagic(T),lake=createLake(T);
+  const firSteps=prepareFir(T);
+  let fir;
+  stage.add(stand,parcel.group,magic.group,lake.group);
+  // Build the hidden tree between frames while the ribbon and lid are on screen.
+  // Skipping ahead still constructs the exact same geometry before it is drawn.
+  function prepareBranches(budget) {
+    const end=performance.now()+budget;
+    do {
+      const step=firSteps.next();
+      if(step.done){fir=step.value;stage.add(fir.group);return;}
+    } while(performance.now()<end);
+  }
   const frame=canvas.parentElement;
   const nightRim=new T.DirectionalLight(0xff9ab4,0);nightRim.position.set(-4,4,-2);stage.add(nightRim);
   let lastWidth=0,lastHeight=0,lastDensity=0,lastState=null;
@@ -117,10 +128,13 @@ async function webglScene(canvas, recipient) {
     stand.position.y=-.54*evening;stand.visible=evening<.98;
     nightRim.intensity=evening*(.23+.65*s.scatter);
     parcel.update({time:s.time,progress:s.parcelProgress});
-    fir.update({time:s.time,growth:s.growth,scatter:s.scatter,light:s.light,frost:s.frost,aimX:2*s.aimX-1,aimY:1-2*s.aimY});
+    if(!fir && s.growth>.001)prepareBranches(Infinity);
+    fir?.update({time:s.time,growth:s.growth,scatter:s.scatter,light:s.light,frost:s.frost,aimX:2*s.aimX-1,aimY:1-2*s.aimY});
     magic.update(s);
     lake.update(s,evening,r,stage,camera);
-    r.render(stage,camera);lastState=s;
+    r.render(stage,camera);
+    if(!fir && lastState)prepareBranches(2);
+    lastState=s;
   }
   return {render:draw,wish(options){magic.wish(options);lake.ripple()},reset:magic.reset,capture(){
     // Compose the print independently so a portrait viewport retains the full crown and reflection.
