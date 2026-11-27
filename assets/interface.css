@@ -1,0 +1,64 @@
+.monogram {
+  width: 39px; height: 43px; border: 0; outline: none; border-radius: 0;
+  background: url(brand/noel-mark.svg) center / contain no-repeat;
+}
+.language-switch {
+  font: 600 12px/1 DM, "Microsoft YaHei", sans-serif; letter-spacing: .035em;
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.tools .language-switch { min-width: 43px; padding: 0 10px; }
+.dialog-language {
+  z-index: 8; min-width: 39px; height: 30px; padding: 0 9px;
+  border: 1px solid #a99b79a6; border-radius: 18px;
+}
+#gift-desk .dialog-language {
+  position: sticky; top: 13px; grid-area: 1 / 1 / -1 / -1;
+  justify-self: end; align-self: start; margin: 13px 54px 0 0;
+  color: #465343; background: #f4ecda;
+}
+.wish-note-panel .dialog-language {
+  position: absolute; top: 12px; right: 49px; color: #f6e3c2;
+  border-color: #ac96725c; background: #2d2b31;
+}
+.wish-note-panel h2 { margin-right: 66px; }
+html:lang(en) { --cn: Georgia, "Times New Roman", serif; }
+html:lang(en) :is(.gold-button, .dock button, #regift, .desk-writing label) {
+  font-family: DM, Arial, sans-serif; font-weight: 500; letter-spacing: .01em;
+}
+html:lang(en) .inscription p {
+  font: 500 italic clamp(18px, 2.7vh, 26px)/1.23 var(--serif);
+  letter-spacing: .015em; margin-top: 10px;
+}
+html:lang(en) #cue { font: 500 italic clamp(21px, 2.8vh, 32px)/1.15 var(--serif); letter-spacing: .015em; }
+html:lang(en) :is(#hint, #load-state, #guide, #desk-status, .text-button) { letter-spacing: .01em; }
+html:lang(en) #hint {
+  width: max-content; max-width: min(85vw, 575px); margin-inline: auto; line-height: 1.45;
+}
+html:lang(en) #letter .card-writing h2 { letter-spacing: -.055em; }
+html:lang(en) #letter .card-writing strong,
+html:lang(en) #desk-title { letter-spacing: -.018em; }
+html:lang(en) #letter .card-writing p { line-height: 1.5; }
+html:lang(en) #letter #card-wish { line-height: 1.5; }
+html:lang(en) #guide h2 { letter-spacing: -.015em; }
+@media (max-width: 630px) {
+  .monogram { width: 31px; height: 36px; }
+  .tools .language-switch { min-width: 38px; padding: 0 7px; font-size: 11px; }
+  html:lang(en) .modes button { padding-inline: 8px; font-size: 12px; gap: 5px; }
+  html:lang(en) #hint { max-width: 82vw; }
+  html:lang(en) #desk-title { font-size: 24px; }
+}
+@media (max-width: 390px) {
+  html:lang(en) #camera { min-width: 34px; padding: 0 7px; }
+  html:lang(en) #camera span { display: none; }
+  html:lang(en) #letter .letter-actions button { padding-inline: 12px; font-size: 12px; }
+  html:lang(en) .wish-note-panel { padding: 43px 20px 22px; }
+  html:lang(en) .wish-note-panel h2 { font-size: 20px; }
+}
+@media (max-height: 570px) and (min-aspect-ratio: 1/1) {
+  #guide { bottom: 81px; max-height: calc(100dvh - 145px); overflow-y: auto; overscroll-behavior: contain; }
+  #guide p { line-height: 1.45; margin-block: 5px; }
+  html:lang(en) .inscription { width: min(29vw, 240px); }
+  html:lang(en) .inscription p { font-size: 17px; margin-top: 4px; }
+  html:lang(en) #sealed-actions { max-width: 34vw; }
+  html:lang(en) #load-state { font-size: 11px; }
+}

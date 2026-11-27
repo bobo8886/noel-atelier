@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101e20">
+  <title>Pour toi · 一份圣诞礼物</title>
+  <link rel="icon" href="assets/brand/noel-mark.svg">
+  <link rel="preload" href="assets/fonts/italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/wish-note.css">
+  <link rel="stylesheet" href="assets/letter.css">
+  <link rel="stylesheet" href="assets/interface.css">
+  <script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body data-phase="sealed">
+  <main id="experience">
+    <canvas id="winter" aria-hidden="true"></canvas>
+    <canvas id="aurora" aria-hidden="true"></canvas>
+    <div class="engraving" aria-hidden="true"><b></b><b></b><b></b><b></b></div>
+    <header>
+      <span class="monogram" aria-hidden="true"></span>
+      <div class="tools">
+        <button type="button" class="language-switch" data-language-switch aria-label="切换到英语">EN</button>
+        <button id="write-gift" data-en-title="Make a personal gift" data-en-label="Make a personal gift" title="制作专属礼物" aria-label="制作专属礼物" aria-haspopup="dialog"><i class="icon envelope"></i></button>
+        <button id="camera" hidden aria-pressed="false" title="开启摄像头手势"><i class="icon video"></i><span>手势互动</span></button>
+        <button id="sound" aria-pressed="false" aria-label="开启音乐" title="开启音乐"><i class="icon muted"></i></button>
+        <button id="fullscreen" aria-label="进入全屏" title="进入全屏"><i class="icon expand"></i></button>
+      </div>
+    </header>
+    <div class="inscription" id="invitation">
+      <h1 lang="fr" data-en="For you." data-en-lang="en">Pour toi.</h1>
+      <p>一份圣诞礼物，只为你。</p>
+    </div>
+    <div id="stage" role="button" tabindex="0" aria-label="拆开礼物" aria-disabled="true">
+      <canvas id="world" aria-hidden="true"></canvas>
+    </div>
+    <canvas id="dedication" aria-hidden="true" hidden></canvas>
+    <div id="sealed-actions" class="lower">
+      <button id="unwrap" class="gold-button" disabled><i class="icon gift"></i><span data-en="Untie the ribbon">解开缎带</span><i class="icon arrow"></i></button>
+      <p id="load-state" role="status">正在准备礼物…</p>
+    </div>
+    <div id="film" class="lower" hidden>
+      <p id="cue" aria-live="polite"></p>
+      <div class="film-line"><span></span></div>
+      <button id="skip" class="text-button">跳过开场</button>
+    </div>
+    <section id="controls" data-en-label="Christmas tree controls" class="lower" aria-label="圣诞树互动" hidden>
+      <p id="hint" role="status" aria-live="polite">拖动旋转圣诞树，长按摘下一颗星。</p>
+      <div class="dock"><div class="modes">
+        <button data-effect="scatter" aria-pressed="false" data-camera-copy data-en-title="Open your hand and move it to guide the stars" title="张开手掌，移动引导星河"><i class="icon galaxy"></i><span data-en="Galaxy">星河</span></button>
+        <button data-effect="gather" aria-pressed="true" data-camera-copy data-en-title="Make a fist to light the tree, branch by branch" title="轻握成拳，逐层点灯"><i class="icon light"></i><span data-en="Lights">亮灯</span></button>
+        <button data-effect="snow" aria-pressed="false" data-camera-copy data-en-title="Make a V sign for snow, then move your hand to steer the wind" title="比出 V 字，移动控制雪风"><i class="icon snow"></i><span data-en="Snow">飘雪</span></button>
+        <button data-effect="wish" aria-pressed="false" data-camera-copy data-en-title="Pinch to gather light, then let go to send a wish" title="捏住再松开，放飞愿望"><i class="icon wish"></i><span data-en="Wish">许愿</span></button>
+      </div><button id="finish" class="finish"><span data-en="Open your card">收下祝福</span> <i class="icon arrow"></i></button></div>
+      <button id="guide-toggle" data-camera-copy data-en="Gestures &amp; controls" class="text-button" aria-controls="guide" aria-expanded="false">手势与操作</button>
+    </section>
+    <div id="guide" hidden><h2 data-en="Four ways to play">指尖的四种魔法</h2><button id="guide-close" data-en-label="Close the controls guide" aria-label="关闭说明"><i class="icon cross"></i></button>
+      <p><b data-camera-copy data-en="Galaxy">星河</b> <span data-camera-copy data-en="Open your palm and move it to guide the stars.">张开手掌，移动手心牵引星流。</span></p><p><b data-camera-copy data-en="Lights">亮灯</b> <span data-camera-copy data-en="Make a fist to light the tree from the bottom up.">轻握成拳，让灯火沿松枝攀升。</span></p><p><b data-camera-copy data-en="Snow">飘雪</b> <span data-camera-copy data-en="Make a V sign, then move left or right to steer the snow.">比出 V 字，左右移动改变风向。</span></p><p><b data-camera-copy data-en="Wish">许愿</b> <span data-camera-copy data-en="Pinch to gather light, then let go to send your wish.">两指捏合蓄光，松手送出愿望。</span></p>
+      <small data-camera-copy data-en="You can also tap an effect, drag to turn the tree, or hold to make a wish.">鼠标或触屏可直接选择效果，拖动旋转，长按许愿。</small>
+    </div>
+    <section id="letter" hidden data-en-label="Your Christmas card" aria-label="圣诞祝福">
+      <div class="keepsake">
+        <figure class="card-print"><canvas id="card-photo" width="1400" height="1050" role="img" data-en-label="The Christmas tree and night sky as you opened your card" aria-label="收下祝福时的圣诞树与夜空"></canvas></figure>
+        <div class="card-writing">
+          <i class="icon fir" aria-hidden="true"></i><h2 lang="en">Merry Christmas</h2>
+          <strong id="card-to">圣诞快乐</strong>
+          <p id="card-body"></p>
+          <blockquote id="card-wish" hidden><i class="icon wish"></i><span></span></blockquote>
+          <em id="card-from">With love, Noël</em>
+        </div>
+      </div>
+      <div class="letter-actions"><button id="keep" class="gold-button"><i class="icon download"></i><span>保存贺卡</span></button><button id="regift" class="outlined-button" aria-haspopup="dialog"><i class="icon envelope"></i><span data-en="Send a gift back">写一份回礼</span></button></div>
+      <button id="replay" data-en="Unwrap again" class="text-button">再拆一次</button>
+    </section>
+    <video id="webcam" data-en-label="Local camera preview" hidden muted playsinline aria-label="本地摄像头预览"></video>
+    <p id="message" role="status" aria-live="polite"></p>
+    <noscript>请启用 JavaScript 来拆开这份礼物。 <span lang="en">Please enable JavaScript to open this gift.</span></noscript>
+  </main>
+  <dialog id="gift-desk" aria-labelledby="desk-title">
+    <form id="gift-form">
+      <button type="button" class="language-switch dialog-language" data-language-switch aria-label="切换到英语">EN</button>
+      <button type="button" id="desk-close" data-en-label="Close the gift desk" aria-label="关闭礼物签"><i class="icon cross"></i></button>
+      <div class="envelope-pane" aria-hidden="true">
+        <div class="envelope-model">
+          <div class="envelope-back"></div><div class="envelope-flap"></div>
+          <div class="note-slip"><i class="icon fir"></i><em lang="fr" data-en="For you." data-en-lang="en">Pour toi.</em><span id="slip-name">给你</span></div>
+          <div class="envelope-front"></div><i class="wax-mark"><i class="icon fir"></i></i>
+        </div>
+      </div>
+      <div class="desk-writing">
+        <h2 id="desk-title" data-en="Write a Christmas gift">写一份圣诞礼物</h2>
+        <div class="name-lines">
+          <label><span data-en="To">送给</span><input id="gift-to" name="to" maxlength="18" required placeholder="收礼人的名字" data-en-placeholder="Recipient’s name" autocomplete="off"></label>
+          <label><span data-en="From">署名</span> <small data-en="optional">选填</small><input id="gift-from" name="from" maxlength="18" placeholder="你的名字" data-en-placeholder="Your name" autocomplete="off"></label>
+        </div>
+        <label class="message-line"><span data-en="Your message">写给对方的话</span><textarea id="gift-words" name="message" rows="3" maxlength="96"></textarea></label>
+        <button type="submit" id="seal-gift" class="gold-button"><i class="icon envelope"></i><span>封好并下载</span></button>
+        <p id="desk-status" role="status" aria-live="polite">会生成一份 HTML 文件，对方打开就能拆礼物。</p>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

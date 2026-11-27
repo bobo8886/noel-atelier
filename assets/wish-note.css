@@ -1,0 +1,136 @@
+.wish-note-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wish-note-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #ffe0b3;
+  padding: 7px 12px 7px 7px;
+}
+.wish-note-entry .icon { width: 13px; height: 13px; }
+.wish-note-entry::after {
+  content: "";
+  width: 1px;
+  height: 11px;
+  background: #ddc69e55;
+  margin-left: 10px;
+}
+.wish-note-entry:hover { color: #fff3d9; }
+.wish-note-panel {
+  width: min(376px, calc(100% - 36px));
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  padding: 28px;
+  margin: auto;
+  border: 1px solid #b29b7b99;
+  border-radius: 14px;
+  color: #f8eddb;
+  background: radial-gradient(ellipse at 12% 0%, #503640 0%, transparent 64%), linear-gradient(148deg, #272730, #182429 90%);
+  box-shadow: 0 18px 78px #070913aa, inset 0 0 0 4px #f6ddbd08;
+}
+.wish-note-panel::backdrop { background: #080c1aad; }
+.wish-note-panel form { display: flex; flex-direction: column; align-items: stretch; }
+.wish-note-panel h2 {
+  margin: 0 32px 19px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 500 22px/1.5 var(--cn);
+  letter-spacing: .04em;
+}
+.wish-note-panel h2 .icon { color: #f4d8af; width: 22px; height: 22px; }
+.wish-note-close {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: #decebf;
+}
+.wish-note-close .icon { width: 15px; height: 15px; }
+.wish-note-close:hover { background: #eac4aa15; }
+.wish-note-panel label { font-size: 13px; color: #e0d4c5; }
+.wish-note-panel input {
+  display: block;
+  width: 100%;
+  margin: 7px 0 0;
+  border: 1px solid #c2a88d80;
+  border-radius: 6px;
+  padding: 12px 11px;
+  background: #0e182170;
+  color: #fff3dd;
+  font: 400 16px/1.5 var(--cn);
+  caret-color: #f8d69d;
+}
+.wish-note-panel input::placeholder { color: #c8b8b4; opacity: .8; }
+.wish-note-panel input:focus-visible { outline: 2px solid #eac78d; outline-offset: 2px; }
+.wish-note-help {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 8px 0 20px;
+  color: #d4c5bd;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.wish-note-count { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wish-note-submit { align-self: flex-end; min-height: 39px; font-size: 14px; padding-inline: 18px; }
+.wish-note-submit .icon { width: 14px; height: 14px; }
+.wish-note-submit:disabled { cursor: default; opacity: .48; transform: none; }
+.wish-note-sky {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+.wish-note-sky canvas { width: 100%; height: 100%; display: block; }
+.wish-note-caption {
+  position: absolute;
+  width: max-content;
+  max-width: min(23vw, 290px);
+  margin: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  font: 500 clamp(16px, 1.55vw, 22px)/1.7 var(--cn);
+  color: #fff0d3;
+  letter-spacing: .09em;
+  text-shadow: 0 1px 3px #150f1d, 0 0 8px #111323, 0 0 19px #0c1026, 0 0 30px #35252e;
+}
+.wish-note-caption::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -16px -18px;
+  background: radial-gradient(ellipse, #1d172d9e, #16172b4d 45%, transparent 73%);
+}
+.wish-note-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-aspect-ratio: 6/5) {
+  .wish-note-caption { max-width: min(77vw, 330px); font-size: 17px; }
+}
+@media (max-height: 430px) {
+  .wish-note-panel { padding-block: 16px; }
+  .wish-note-panel h2 { margin-bottom: 9px; font-size: 19px; }
+  .wish-note-help { margin-bottom: 10px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .wish-note-panel[open] { animation: wish-note-open .2s ease-out both; }
+  @keyframes wish-note-open { from { opacity: 0; transform: translateY(5px); } }
+}
