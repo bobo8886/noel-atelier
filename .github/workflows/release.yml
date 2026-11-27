@@ -1,0 +1,51 @@
+name: Publish gift
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+permissions:
+  contents: write
+  packages: write
+jobs:
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          server-id: github
+      - name: Prepare the release files
+        run: |
+          npm ci
+          npm run build
+          python3 tools/package-release.py
+      - name: Publish the offline downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release create "$GITHUB_REF_NAME" --verify-tag --title "Noël Atelier $GITHUB_REF_NAME · 圣诞工坊" --notes-file .github/release-notes.md
+          fi
+          gh release upload "$GITHUB_REF_NAME" dist/noel-atelier-offline.html dist/noel-atelier.zip --clobber
+      - name: Publish the same ZIP to GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          artifact="https://maven.pkg.github.com/$GITHUB_REPOSITORY/io/github/bobo8886/noel-atelier/$version/noel-atelier-$version.zip"
+          if curl --silent --fail --location -u "$GITHUB_ACTOR:$GITHUB_TOKEN" "$artifact" -o "$RUNNER_TEMP/registry.zip"; then
+            cmp "$RUNNER_TEMP/registry.zip" dist/noel-atelier.zip
+            exit 0
+          fi
+          mvn --batch-mode --no-transfer-progress org.apache.maven.plugins:maven-deploy-plugin:3.1.4:deploy-file \
+            -DrepositoryId=github -Durl="https://maven.pkg.github.com/$GITHUB_REPOSITORY" \
+            -DgroupId=io.github.bobo8886 -DartifactId=noel-atelier -Dversion="$version" \
+            -Dpackaging=zip -Dfile=dist/noel-atelier.zip -DgeneratePom=true
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors -u "$GITHUB_ACTOR:$GITHUB_TOKEN" "$artifact" -o "$RUNNER_TEMP/registry.zip"
+          cmp "$RUNNER_TEMP/registry.zip" dist/noel-atelier.zip
